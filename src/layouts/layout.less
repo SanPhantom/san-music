@@ -1,0 +1,72 @@
+.layout-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &.flex-row {
+    flex-direction: row;
+    flex-grow: 1;
+    min-height: 0;
+  }
+
+  .layout-header {
+    width: 100%;
+    height: 64px;
+    background-color: #123;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  }
+
+  .layout-side {
+    width: 340px;
+    height: 100%;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  }
+
+  .layout-container {
+    flex-grow: 1;
+    position: relative;
+
+    .layout-main {
+      height: 100%;
+      padding: 16px;
+      overflow: auto;
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .toolbar {
+        height: 64px;
+      }
+    }
+
+    .abs-box {
+      width: 100%;
+      height: 64px;
+      background-color: #ffffff;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      z-index: 2;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    }
+  }
+
+  .layout-footer {
+    width: 100%;
+    min-height: 45px;
+    background-color: #1e2732;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    a {
+      color: #bdbdbd;
+      font-size: 14px;
+    }
+
+  }
+}

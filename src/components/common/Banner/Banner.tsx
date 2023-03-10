@@ -6,6 +6,7 @@ import {
   useDebounceFn,
   useMemoizedFn,
   useSetState,
+  useSize,
 } from "ahooks";
 import React, { useRef } from "react";
 import "./banner.less";
@@ -26,6 +27,9 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
   const bannerRootRef = useRef<HTMLDivElement>(null);
   const currentRef = useRef<number>(1);
 
+  const bannerRootSize = useSize(bannerRootRef);
+  const bannerRootWidth = bannerRootSize?.width ?? 0;
+
   // const [isTouch, { setTrue: startTouch, setFalse: endTouch }] =
   //   useBoolean(false);
   const [isToggle, { setTrue: startToggle, setFalse: endToggle }] =
@@ -37,8 +41,32 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
     touchDistance: 0,
   });
 
+  const nextItem = useMemoizedFn(() => {
+    // currentRef.current = state.current + 1;
+    setState({
+      current: state.current + 1,
+    });
+  });
+
+  const prevItem = useMemoizedFn(() => {
+    // cleanTimeout();
+    // currentRef.current = state.current - 1;
+    setState({
+      current: state.current - 1,
+    });
+  });
+
+  const { run: cycleBanner, cancel } = useDebounceFn(
+    () => {
+      nextItem();
+    },
+    {
+      wait: 2000,
+    }
+  );
+
   const isTransition = useCreation(() => {
-    console.log({ trans: state.touchDistance === 0 && !isToggle });
+    cancel();
     return state.touchDistance === 0 && !isToggle;
   }, [state.touchDistance, isToggle]);
 
@@ -52,33 +80,13 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
     }
   });
 
-  // const cleanTimeout = useMemoizedFn(() => {
-  //   if (timerRef.current) {
-  //     clearTimeout(Number(timerRef.current));
-  //     timerRef.current = null;
-  //   }
-  // });
-
-  const nextItem = useMemoizedFn(() => {
-    setState({
-      current: state.current + 1,
-    });
-  });
-
-  const prevItem = useMemoizedFn(() => {
-    // cleanTimeout();
-    setState({
-      current: state.current - 1,
-    });
-  });
-
   const isBack = useMemoizedFn(() => {
     if (list.length > 1) {
-      if (currentRef.current === 0) {
+      if (state.current === 0) {
         currentRef.current = list.length;
         return false;
       }
-      if (currentRef.current === list.length + 1) {
+      if (state.current === list.length + 1) {
         currentRef.current = 1;
         return false;
       }
@@ -86,21 +94,11 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
     currentRef.current = -1;
   });
 
-  const { run: cycleBanner } = useDebounceFn(
-    () => {
-      nextItem();
-    },
-    {
-      wait: 2000,
-    }
-  );
-
   const transitionEnd = useMemoizedFn(() => {
     // startTouch();
     isBack();
     if (currentRef.current !== -1) {
       startToggle();
-      return;
     } else {
       cycleBanner();
     }
@@ -108,37 +106,39 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
 
   const translateX = useCreation(() => {
     // cleanTimeout();
-    const bannerWidth = bannerRootRef.current?.clientWidth ?? 0;
-    return state.current * bannerWidth - state.touchDistance;
-  }, [state.current, state.touchDistance]);
+    return state.current * bannerRootWidth - state.touchDistance;
+  }, [state.current, state.touchDistance, bannerRootWidth]);
 
   useCreation(() => {
     if (isToggle) {
-      console.log({ state: state.current, ref: currentRef.current });
+      cancel();
       setState({
         current: currentRef.current,
       });
     } else {
-      // startTouch();
+      currentRef.current = state.current;
+    }
+  }, [isToggle, list]);
+
+  useCreation(() => {
+    if (!isToggle) {
       isBack();
-      if (currentRef.current !== -1) {
-        startToggle();
-      } else {
-        currentRef.current = state.current;
+      if (currentRef.current === -1) {
         cycleBanner();
       }
     }
-  }, [cycleBanner, startToggle, isToggle, state.current, setState]);
+  }, [cycleBanner, state.current, isToggle]);
 
   useCreation(() => {
-    const bannerWidth = bannerRootRef.current?.clientWidth ?? 0;
     if (
-      translateX === bannerWidth ||
-      translateX === list.length * bannerWidth
+      translateX === bannerRootWidth ||
+      translateX === list.length * bannerRootWidth
     ) {
-      endToggle();
+      setTimeout(() => {
+        endToggle();
+      }, 50);
     }
-  }, [list, translateX, endToggle]);
+  }, [list, translateX, endToggle, bannerRootWidth]);
 
   return (
     <div className="banner-root" id="banner-root" ref={bannerRootRef}>

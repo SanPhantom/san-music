@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useCreation, useMemoizedFn, useMount, useSetState } from "ahooks";
 import React from "react";
 import { banner } from "../../services/common.service";
@@ -41,9 +41,25 @@ const MusicBanner = () => {
             key={`${item.encodeId}_${index}`}
             sx={{
               width: "100%",
+              position: "relative",
+              cursor: "pointer",
             }}
           >
             <Image src={item.imageUrl} alt="" />
+            <Box
+              sx={{
+                backgroundColor: item.titleColor,
+                color: "#ffffff",
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                px: 2,
+                py: 0.5,
+                borderTopLeftRadius: 8,
+              }}
+            >
+              <Typography fontSize={14}>{item.typeTitle}</Typography>
+            </Box>
           </Box>
         )}
       />

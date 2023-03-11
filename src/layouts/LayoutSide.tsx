@@ -11,16 +11,12 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useCreation } from "ahooks";
 import menus from "../config/menu.config";
+import UserPlaylist from "../components/UserPlaylist";
 
 interface ILayoutSideProps {}
 
 const LayoutSide = () => {
   const location = useLocation();
-  const data = new Array(1000).fill(0);
-
-  useCreation(() => {
-    console.log({ location });
-  }, [location]);
 
   return (
     <Drawer
@@ -32,7 +28,7 @@ const LayoutSide = () => {
       }}
     >
       <Toolbar />
-      <Box
+      <Stack
         sx={{ flex: 1, display: "flex", minHeight: 0, flexDirection: "column" }}
       >
         <Stack p={2} spacing={1}>
@@ -76,7 +72,7 @@ const LayoutSide = () => {
             flex: 1,
             minHeight: 0,
             overflow: "auto",
-            p: 2,
+            py: 2,
             ["&::-webkit-scrollbar"]: {
               width: 4,
             },
@@ -87,11 +83,9 @@ const LayoutSide = () => {
             },
           }}
         >
-          {data.map((item, index) => (
-            <div>{`item ${item + index}`}</div>
-          ))}
+          <UserPlaylist />
         </Stack>
-      </Box>
+      </Stack>
       <Box sx={{ width: "100%", height: 45 }} />
     </Drawer>
   );

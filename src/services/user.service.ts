@@ -36,7 +36,7 @@ export const loginByVisitor = () => {
 
 // 登陆状态
 export const loginStatus = () => {
-  return musicAxios.get(
+  return musicAxios.post(
     `/login/status?timestamp=${new Date().getTime()}&realIP=116.25.146.177`
   );
 };

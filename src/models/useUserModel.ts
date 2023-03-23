@@ -1,4 +1,4 @@
-import { useMount, useSetState } from "ahooks";
+import { useMemoizedFn, useMount, useSetState } from "ahooks";
 import { createGlobalStore } from "hox";
 import { setLocalItem } from "../config/localforage.config";
 import { loginStatus, loginByVisitor } from "../services/user.service";
@@ -22,7 +22,7 @@ export const [useUserModel, getUserModel] = createGlobalStore(() => {
     cookie: undefined,
   });
 
-  useMount(async () => {
+  const updateLoginStatus = useMemoizedFn(async () => {
     const { data } = await loginStatus();
     if (!data.account.anonimousUser && !data.profile) {
       const anonymousUser = await loginByVisitor();
@@ -45,11 +45,26 @@ export const [useUserModel, getUserModel] = createGlobalStore(() => {
       });
     } else {
       // todo
+      const { userId, avatarUrl, nickname } = data.profile;
+      updateUser({
+        isLogin: true,
+        isAnonymous: false,
+        userInfo: {
+          id: userId,
+          avatar: avatarUrl,
+          nickname: nickname,
+        },
+      });
     }
+  });
+
+  useMount(async () => {
+    await updateLoginStatus();
   });
 
   return {
     user,
     updateUser,
+    updateLoginStatus,
   };
 });

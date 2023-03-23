@@ -1,87 +1,68 @@
 import {
+  alpha,
   Box,
   Button,
   Divider,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
   Paper,
   Stack,
-  TextField,
-  Typography,
   useTheme,
 } from "@mui/material";
-import { QrCode, VisibilityOff } from "@mui/icons-material";
-import React from "react";
+import { EmailOutlined, QrCode } from "@mui/icons-material";
 
-interface ILoginPageProps {}
+import React from "react";
+import LoginTitle from "../components/login/LoginTitle";
+import LoginByEmail from "../components/login/LoginByEmail";
+import LoginBg from "../components/login/LoginBg";
+import { useSetState } from "ahooks";
+import LoginByQRCode from "../components/login/LoginByQRCode";
 
 const LoginPage = () => {
   const theme = useTheme();
+
+  const [state, setState] = useSetState({
+    isCode: false,
+  });
+
   return (
-    <Stack alignItems={"center"} sx={{ pt: 18 }}>
-      <Paper elevation={1} sx={{ p: 2, maxWidth: 540, width: "100%" }}>
-        <Stack width={"100%"} spacing={2}>
-          <Stack>
-            <Typography
-              variant="h5"
-              fontWeight={700}
-              color={theme.palette.primary.main}
-            >
-              San Music World
-            </Typography>
-            <Typography color={"text.secondary"}>self music player</Typography>
-          </Stack>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        fontSize: 0,
+      }}
+    >
+      <LoginBg />
+      <Stack alignItems={"center"} sx={{ pt: 18 }}>
+        <Paper
+          elevation={1}
+          sx={{
+            p: 2,
+            maxWidth: 540,
+            width: "100%",
+            bgcolor: alpha(theme.palette.common.white, 1),
+          }}
+        >
+          <Stack width={"100%"} spacing={2}>
+            <LoginTitle />
 
-          <Divider sx={{ width: "100%" }} />
+            <Divider sx={{ width: "100%" }} />
 
-          <Stack sx={{ minHeight: 240 }} spacing={2}>
-            <FormControl>
-              <InputLabel htmlFor="outlined-adornment-password">
-                Email
-              </InputLabel>
-              <OutlinedInput
-                endAdornment={
-                  <InputAdornment position="end">@163.com</InputAdornment>
-                }
-                label="Email"
-              />
-            </FormControl>
-            <FormControl>
-              <InputLabel htmlFor="outlined-adornment-password">
-                Password
-              </InputLabel>
-              <OutlinedInput
-                type={"password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      edge="end"
-                    >
-                      <VisibilityOff />
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-              />
-            </FormControl>
+            <Stack minHeight={200}>
+              {state.isCode ? <LoginByQRCode /> : <LoginByEmail />}
+            </Stack>
+
             <Button
-              variant="contained"
-              size="large"
-              sx={{ color: theme.palette.common.white }}
+              variant="text"
+              startIcon={state.isCode ? <EmailOutlined /> : <QrCode />}
+              onClick={() => setState({ isCode: !state.isCode })}
             >
-              Sign In
-            </Button>
-            <Button variant="text" startIcon={<QrCode />}>
-              二维码登录
+              {state.isCode ? "邮箱登录" : "二维码登录"}
             </Button>
           </Stack>
-        </Stack>
-      </Paper>
-    </Stack>
+        </Paper>
+      </Stack>
+    </Box>
   );
 };
 

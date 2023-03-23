@@ -50,10 +50,14 @@ const RecommendResource = () => {
               <Avatar
                 src={item.picUrl}
                 variant="rounded"
-                sx={{ width: 180, height: 180 }}
+                sx={{
+                  width: 168,
+                  height: 168,
+                  boxShadow: (theme) => theme.shadows[1],
+                }}
               ></Avatar>
-              <EllipsisText line={2}>
-                {item.name}这就是阿萨大厦酒店卡时间打卡
+              <EllipsisText line={2} variant={"body2"}>
+                {item.name}
               </EllipsisText>
             </Stack>
           ))}

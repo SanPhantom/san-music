@@ -22,9 +22,9 @@ const LayoutSide = () => {
     <Drawer
       variant="permanent"
       sx={{
-        width: 240,
+        width: 280,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: 240, boxSizing: "border-box" },
+        [`& .MuiDrawer-paper`]: { width: 280, boxSizing: "border-box" },
       }}
     >
       <Toolbar />

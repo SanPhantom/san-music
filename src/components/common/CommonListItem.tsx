@@ -26,18 +26,26 @@ const CommonListItem = ({
   return (
     <ListItem sx={{ px: 0, cursor: "pointer" }}>
       {avatar && (
-        <ListItemAvatar>
-          <Avatar src={avatar} variant="rounded" />
+        <ListItemAvatar sx={{ minWidth: 50 }}>
+          <Avatar
+            src={avatar}
+            variant="rounded"
+            sx={{
+              width: 42,
+              height: 42,
+              boxShadow: (theme) => theme.shadows[1],
+            }}
+          />
         </ListItemAvatar>
       )}
       <ListItemText
         primary={
-          <EllipsisText fontSize={14} color={selected ? "primary.main" : ""}>
+          <EllipsisText variant="body2" color={selected ? "primary.main" : ""}>
             {primary}
           </EllipsisText>
         }
         secondary={
-          <Typography fontSize={12} color="text.secondary">
+          <Typography variant="caption" color="text.secondary">
             {secondary}
           </Typography>
         }

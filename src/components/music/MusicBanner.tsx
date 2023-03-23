@@ -26,12 +26,12 @@ const MusicBanner = () => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: "70%",
         height: 0,
         position: "relative",
         boxSizing: "border-box",
         overflow: "hidden",
-        pb: "calc(100% * (10 / 27) )",
+        pb: "calc(70% * (10 / 27) )",
       }}
     >
       <Banner
@@ -43,6 +43,7 @@ const MusicBanner = () => {
               width: "100%",
               position: "relative",
               cursor: "pointer",
+              fontSize: 0,
             }}
           >
             <Image src={item.imageUrl} alt="" />

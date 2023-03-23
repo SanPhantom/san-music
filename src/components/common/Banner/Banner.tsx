@@ -78,9 +78,9 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
     }
   }, [prevCurrent]);
 
-  useCreation(() => {
+  useUpdateEffect(() => {
     startNextItem();
-  }, []);
+  }, [list]);
 
   return (
     <div className="banner-root" id="banner-root" ref={bannerRootRef}>

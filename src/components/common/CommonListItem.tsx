@@ -31,6 +31,11 @@ const CommonListItem = ({
         py: 1,
         cursor: "pointer",
         borderRadius: 1,
+        transition: (theme) =>
+          theme.transitions.create(["background-color"], {
+            duration: theme.transitions.duration.shortest,
+            easing: theme.transitions.easing.easeInOut,
+          }),
         ["&:hover"]: {
           backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.25),
         },

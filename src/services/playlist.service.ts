@@ -14,8 +14,6 @@ export const getRecommendSongs = () => {
   return musicAxios.get<any, any>("/recommend/songs");
 };
 
-export const newSongExpress = (data: any) => {
-  return musicAxios.get<any, any>("/top/song", {
-    params: data,
-  });
+export const newSongExpress = () => {
+  return musicAxios.get<any, any>("/personalized/newsong", {});
 };

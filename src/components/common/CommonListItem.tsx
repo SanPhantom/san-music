@@ -1,4 +1,5 @@
 import {
+  alpha,
   Avatar,
   ListItem,
   ListItemAvatar,
@@ -24,7 +25,17 @@ const CommonListItem = ({
   ...props
 }: ICommonListItemProps) => {
   return (
-    <ListItem sx={{ px: 0, cursor: "pointer" }}>
+    <ListItem
+      sx={{
+        px: 1,
+        py: 1,
+        cursor: "pointer",
+        borderRadius: 1,
+        ["&:hover"]: {
+          backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.25),
+        },
+      }}
+    >
       {avatar && (
         <ListItemAvatar sx={{ minWidth: 50 }}>
           <Avatar

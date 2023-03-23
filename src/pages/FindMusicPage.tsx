@@ -3,6 +3,7 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useCreation } from "ahooks";
 import React from "react";
 import MusicBanner from "../components/music/MusicBanner";
+import NewSongsPull from "../components/NewSongsPull";
 import RecommendResource from "../components/RecommendResource";
 import {
   getRecommendPlaylist,
@@ -51,14 +52,7 @@ const FindMusicPage = () => {
         </Button>
       </Stack>
       <RecommendResource />
-      <Stack>
-        <Stack>
-          <Typography variant="h6" fontWeight={600}>
-            新歌速递
-          </Typography>
-        </Stack>
-        <Box sx={{ minHeight: 120 }}></Box>
-      </Stack>
+      <NewSongsPull />
       <Stack>
         <Stack>
           <Typography variant="h6" fontWeight={600}>

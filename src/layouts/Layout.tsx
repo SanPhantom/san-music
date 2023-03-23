@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import MusicMiniPlayer from "../components/music/MusicMiniPlayer";
 import UserInfo from "../components/UserInfo";
 import "./layout.less";
 import LayoutSide from "./LayoutSide";
@@ -45,10 +46,10 @@ const Layout = ({ children }: ILayoutProps) => {
         <Stack direction={"row"} sx={{ flex: 1, width: "100%", minHeight: 0 }}>
           <LayoutSide />
           <Stack sx={{ flexGrow: 1, minWidth: 0, height: "100%" }}>
-            <Box component={"main"} sx={{ flex: 1, overflow: "auto", p: 2 }}>
+            <Box component={"main"} sx={{ flex: 1, overflow: "auto", py: 2 }}>
               <Container>{children}</Container>
             </Box>
-            <div className="abs-box"></div>
+            <MusicMiniPlayer />
           </Stack>
         </Stack>
         <Box sx={{ width: "100%", height: 45 }} />

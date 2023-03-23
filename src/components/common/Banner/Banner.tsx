@@ -4,9 +4,13 @@ import {
   useBoolean,
   useCreation,
   useDebounceFn,
+  useLatest,
   useMemoizedFn,
+  useMount,
+  usePrevious,
   useSetState,
-  useSize,
+  useTimeout,
+  useUpdateEffect,
 } from "ahooks";
 import React, { useRef } from "react";
 import "./banner.less";
@@ -23,40 +27,43 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
   const bannerTranslateStyle: React.CSSProperties = {
     transition: "transform 700ms ease-in-out",
   };
-
   const bannerRootRef = useRef<HTMLDivElement>(null);
-  const currentRef = useRef<number>(1);
+  const bannerRootWidth =
+    bannerRootRef.current?.getBoundingClientRect()?.width ?? 0;
 
-  const bannerRootSize = useSize(bannerRootRef);
-  const bannerRootWidth = bannerRootSize?.width ?? 0;
-
-  // const [isTouch, { setTrue: startTouch, setFalse: endTouch }] =
-  //   useBoolean(false);
-  const [isToggle, { setTrue: startToggle, setFalse: endToggle }] =
-    useBoolean(false);
-
+  const [isPlay, { setTrue: startPlay, setFalse: stopPlay }] = useBoolean(true);
   const [state, setState] = useSetState({
-    current: currentRef.current,
-    startTouchX: 0,
-    touchDistance: 0,
+    current: 1,
   });
+  const currentRef = useLatest(state.current);
+  const prevCurrent = usePrevious(state.current);
+
+  const isInterface = useCreation(() => {
+    const result = currentRef.current >= list.length + 1 && isPlay;
+    return result;
+  }, [currentRef.current, isPlay]);
+
+  const offsetWidth = useCreation(() => {
+    return currentRef.current * bannerRootWidth;
+  }, [currentRef.current, bannerRootWidth]);
 
   const nextItem = useMemoizedFn(() => {
-    // currentRef.current = state.current + 1;
     setState({
-      current: state.current + 1,
+      current: currentRef.current + 1,
     });
   });
 
-  const prevItem = useMemoizedFn(() => {
-    // cleanTimeout();
-    // currentRef.current = state.current - 1;
-    setState({
-      current: state.current - 1,
-    });
+  const handleTransitionEnd = useMemoizedFn(() => {
+    if (isInterface) {
+      stopPlay();
+      setState({
+        current: 1,
+      });
+    }
+    startNextItem();
   });
 
-  const { run: cycleBanner, cancel } = useDebounceFn(
+  const { run: startNextItem, flush } = useDebounceFn(
     () => {
       nextItem();
     },
@@ -65,80 +72,15 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
     }
   );
 
-  const isTransition = useCreation(() => {
-    cancel();
-    return state.touchDistance === 0 && !isToggle;
-  }, [state.touchDistance, isToggle]);
-
-  const isSelectDot = useMemoizedFn((index: number) => {
-    if (state.current > list.length) {
-      return index === 0;
-    } else if (state.current === 0) {
-      return index === list.length - 1;
-    } else {
-      return index === state.current - 1;
+  useUpdateEffect(() => {
+    if (prevCurrent === 0 || prevCurrent === list.length + 1) {
+      startPlay();
     }
-  });
-
-  const isBack = useMemoizedFn(() => {
-    if (list.length > 1) {
-      if (state.current === 0) {
-        currentRef.current = list.length;
-        return false;
-      }
-      if (state.current === list.length + 1) {
-        currentRef.current = 1;
-        return false;
-      }
-    }
-    currentRef.current = -1;
-  });
-
-  const transitionEnd = useMemoizedFn(() => {
-    // startTouch();
-    isBack();
-    if (currentRef.current !== -1) {
-      startToggle();
-    } else {
-      cycleBanner();
-    }
-  });
-
-  const translateX = useCreation(() => {
-    // cleanTimeout();
-    return state.current * bannerRootWidth - state.touchDistance;
-  }, [state.current, state.touchDistance, bannerRootWidth]);
+  }, [prevCurrent]);
 
   useCreation(() => {
-    if (isToggle) {
-      cancel();
-      setState({
-        current: currentRef.current,
-      });
-    } else {
-      currentRef.current = state.current;
-    }
-  }, [isToggle, list]);
-
-  useCreation(() => {
-    if (!isToggle) {
-      isBack();
-      if (currentRef.current === -1) {
-        cycleBanner();
-      }
-    }
-  }, [cycleBanner, state.current, isToggle]);
-
-  useCreation(() => {
-    if (
-      translateX === bannerRootWidth ||
-      translateX === list.length * bannerRootWidth
-    ) {
-      setTimeout(() => {
-        endToggle();
-      }, 50);
-    }
-  }, [list, translateX, endToggle, bannerRootWidth]);
+    startNextItem();
+  }, []);
 
   return (
     <div className="banner-root" id="banner-root" ref={bannerRootRef}>
@@ -148,10 +90,10 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
             className="banner-item-container"
             style={{
               width: `${list.length + 2}00%`,
-              transform: `translateX(-${translateX}px)`,
-              ...(isTransition ? bannerTranslateStyle : {}),
+              transform: `translateX(-${offsetWidth}px)`,
+              ...(isPlay ? bannerTranslateStyle : {}),
             }}
-            onTransitionEnd={() => transitionEnd()}
+            onTransitionEnd={() => handleTransitionEnd()}
           >
             {renderItem(list[list.length - 1], list.length - 1)}
             {list.map((item, index) => renderItem(item, index))}
@@ -164,9 +106,10 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
                   key={`dot_${index}`}
                   className="banner-dot"
                   style={{
-                    backgroundColor: isSelectDot(index)
-                      ? theme.palette.primary.main
-                      : theme.palette.grey[50],
+                    backgroundColor:
+                      index === currentRef.current - 1
+                        ? theme.palette.primary.main
+                        : theme.palette.grey[50],
                   }}
                 ></div>
               ))}
@@ -175,7 +118,7 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
           <div className="banner-control-container">
             <div
               className="banner-control-item banner-control-left"
-              onClick={prevItem}
+              // onClick={prevItem}
             >
               <ChevronLeft color="primary" />
             </div>

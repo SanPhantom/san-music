@@ -7,11 +7,13 @@ interface IUserInfoProps {}
 const UserInfo = () => {
   const { user } = useUserModel();
   const { isLogin, isAnonymous, userInfo } = user;
-  const noLogin = !isLogin && !isAnonymous;
+  const noLogin = !isLogin || isAnonymous;
   return (
     <div>
       {noLogin ? (
-        <Button color="inherit">Sign In</Button>
+        <Button color="inherit" onClick={() => {}}>
+          Sign In
+        </Button>
       ) : (
         <Stack direction={"row"} alignItems="center" spacing={1}>
           <Avatar src={userInfo?.avatar} />

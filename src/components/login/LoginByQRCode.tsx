@@ -15,8 +15,10 @@ import {
 } from "../../services/common.service";
 import { useUserModel } from "../../models/useUserModel";
 import { setLocalItem } from "../../config/localforage.config";
+import { useNavigate } from "react-router-dom";
 
 const LoginByQRCode = () => {
+  const navigate = useNavigate();
   const [state, setState] = useSetState({
     key: null,
     qrUrl: null,
@@ -61,6 +63,7 @@ const LoginByQRCode = () => {
         case 803:
           setLocalItem("m_cookie", res.cookie);
           updateLoginStatus();
+          navigate("/");
           clear();
           break;
         default:

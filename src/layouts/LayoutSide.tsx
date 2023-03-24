@@ -1,11 +1,11 @@
 import {
   alpha,
-  Box,
   CardContent,
   Divider,
   Drawer,
   Stack,
   Toolbar,
+  Link as MuiLink,
 } from "@mui/material";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -86,7 +86,25 @@ const LayoutSide = () => {
           <UserPlaylist />
         </Stack>
       </Stack>
-      <Box sx={{ width: "100%", height: 45 }} />
+      {/* <Stack
+        alignItems={"center"}
+        justifyContent={"center"}
+        sx={{
+          width: "100%",
+          minHeight: 45,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: (theme) => alpha(theme.palette.common.black, 0.8),
+        }}
+      >
+        <MuiLink
+          href="https://beian.miit.gov.cn/"
+          target="_blank"
+          sx={{ fontSize: 12 }}
+        >
+          Copyright © 2023 - 2024 by SanPhantom
+        </MuiLink>
+      </Stack> */}
+      {/* <Box sx={{ width: "100%", height: 45 }} /> */}
     </Drawer>
   );
 };

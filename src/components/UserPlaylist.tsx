@@ -4,7 +4,7 @@ import { useUserModel } from "../models/useUserModel";
 import { getUserPlaylist } from "../services/playlist.service";
 import { filter } from "ramda";
 import PlaylistView from "./playlist/PlaylistView";
-import { Box, Stack } from "@mui/material";
+import { Box, Divider, Stack } from "@mui/material";
 
 interface IUserPlaylistProps {}
 
@@ -42,7 +42,7 @@ const UserPlaylist = () => {
   }, [user.userInfo?.id]);
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1.5}>
       <PlaylistView title="我的音乐" playlist={lovePlaylist} />
       <PlaylistView title="我创建的音乐" playlist={createPlaylist} />
       <PlaylistView title="我收藏的音乐" playlist={collectPlaylist} />

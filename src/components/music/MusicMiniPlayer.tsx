@@ -3,6 +3,7 @@ import {
   Container,
   LinearProgress,
   Stack,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -11,11 +12,10 @@ interface IMusicMiniPlayerProps {}
 
 const MusicMiniPlayer = () => {
   return (
-    <Stack
+    <Toolbar
       className="abs-box "
       sx={{
         width: "100%",
-        height: 54,
         backgroundColor: (theme) => theme.palette.common.white,
         position: "relative",
       }}
@@ -42,7 +42,7 @@ const MusicMiniPlayer = () => {
           <Typography>456</Typography>
         </Stack>
       </Container>
-    </Stack>
+    </Toolbar>
   );
 };
 

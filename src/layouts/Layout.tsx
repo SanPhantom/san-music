@@ -52,28 +52,6 @@ const Layout = ({ children }: ILayoutProps) => {
             <MusicMiniPlayer />
           </Stack>
         </Stack>
-        <Box sx={{ width: "100%", height: 45 }} />
-      </Stack>
-      <Stack
-        alignItems={"center"}
-        justifyContent={"center"}
-        sx={{
-          width: "100%",
-          minHeight: 45,
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: (theme) => alpha(theme.palette.common.black, 0.8),
-        }}
-      >
-        <Link
-          href="https://beian.miit.gov.cn/"
-          target="_blank"
-          sx={{ fontSize: 14 }}
-        >
-          Copyright © 2023 - 2024 by SanPhantom
-        </Link>
       </Stack>
     </Stack>
   );

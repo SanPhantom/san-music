@@ -1,4 +1,5 @@
-import { Stack, Typography, Box, Avatar } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { Stack, Typography, Box, Avatar, IconButton } from "@mui/material";
 import { useCreation, useSetState } from "ahooks";
 import React from "react";
 import { useUserModel } from "../models/useUserModel";
@@ -24,11 +25,31 @@ const RecommendResource = () => {
   }, [uid]);
 
   return (
-    <Stack spacing={1}>
-      <Stack>
+    <Stack spacing={2}>
+      <Stack
+        direction={"row"}
+        alignItems="center"
+        justifyContent={"space-between"}
+      >
         <Typography variant="h6" fontWeight={600}>
           推荐歌单
         </Typography>
+        <Stack direction={"row"} alignItems="center" spacing={2}>
+          <IconButton
+            sx={{ boxShadow: (theme) => theme.shadows[1] }}
+            color="primary"
+            size="small"
+          >
+            <ChevronLeft />
+          </IconButton>
+          <IconButton
+            sx={{ boxShadow: (theme) => theme.shadows[1] }}
+            color="primary"
+            size="small"
+          >
+            <ChevronRight />
+          </IconButton>
+        </Stack>
       </Stack>
       <Box
         sx={{
@@ -46,7 +67,7 @@ const RecommendResource = () => {
       >
         <Stack direction={"row"} spacing={2}>
           {state.list.map((item) => (
-            <Stack key={item.id} spacing={0.5} sx={{ width: 180 }}>
+            <Stack key={item.id} spacing={1} sx={{ width: 180 }}>
               <Avatar
                 src={item.picUrl}
                 variant="rounded"

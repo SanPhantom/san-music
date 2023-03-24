@@ -4,6 +4,7 @@ import { newSongExpress } from "../services/playlist.service";
 import { formatArtists, formatImageSize } from "../utils";
 import CommonListItem from "./common/CommonListItem";
 import Loading from "./common/Loading";
+import MusicSongItem from "./music/MusicSongItem";
 
 const NewSongsPull = () => {
   const { data, run, loading } = useRequest(newSongExpress, {
@@ -26,42 +27,38 @@ const NewSongsPull = () => {
           <Loading />
         ) : (
           <Stack direction={"row"} spacing={2}>
-            <Paper
-              elevation={0}
+            <Stack
               sx={{
                 flex: 1,
-                p: 2,
+                px: 1,
+                py: 1.5,
                 border: 1,
+                borderRadius: 2,
+                gap: 1,
                 borderColor: (theme) =>
                   alpha(theme.palette.text.secondary, 0.1),
               }}
             >
               {data?.result.slice(0, 5).map((item: any) => (
-                <CommonListItem
-                  primary={item.song.name}
-                  secondary={formatArtists(item.song.artists)}
-                  avatar={formatImageSize(item.song.album.picUrl, 40)}
-                />
+                <MusicSongItem song={item.song} />
               ))}
-            </Paper>
-            <Paper
-              elevation={0}
+            </Stack>
+            <Stack
               sx={{
                 flex: 1,
-                p: 2,
+                px: 1,
+                py: 1.5,
                 border: 1,
+                borderRadius: 2,
+                gap: 1,
                 borderColor: (theme) =>
                   alpha(theme.palette.text.secondary, 0.1),
               }}
             >
               {data?.result.slice(5, 10).map((item: any) => (
-                <CommonListItem
-                  primary={item.song.name}
-                  secondary={formatArtists(item.song.artists)}
-                  avatar={formatImageSize(item.song.album.picUrl, 40)}
-                />
+                <MusicSongItem song={item.song} />
               ))}
-            </Paper>
+            </Stack>
           </Stack>
         )}
       </Stack>

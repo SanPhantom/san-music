@@ -44,17 +44,18 @@ const CommonListItem = ({
       {avatar && (
         <ListItemAvatar sx={{ minWidth: 50 }}>
           <Avatar
-            src={avatar}
+            src={`${avatar}?param=40y40`}
             variant="rounded"
             sx={{
-              width: 42,
-              height: 42,
+              width: 40,
+              height: 40,
               boxShadow: (theme) => theme.shadows[1],
             }}
           />
         </ListItemAvatar>
       )}
       <ListItemText
+        sx={{ my: 0 }}
         primary={
           <EllipsisText variant="body2" color={selected ? "primary.main" : ""}>
             {primary}

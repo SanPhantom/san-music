@@ -1,3 +1,4 @@
+import { ChevronRight } from "@mui/icons-material";
 import { CardContent, Stack, Typography } from "@mui/material";
 import React from "react";
 import CommonListItem from "../common/CommonListItem";
@@ -16,16 +17,22 @@ const PlaylistView = ({
   itemClick,
 }: IPlaylistViewProps) => {
   return (
-    <CardContent sx={{ boxSizing: "border-box", width: "100%", py: 0 }}>
+    <Stack sx={{ boxSizing: "border-box", width: "100%", px: 1 }}>
       <Stack spacing={0.5}>
-        <Typography
-          fontSize={14}
-          color="text.secondary"
-          sx={{ userSelect: "none" }}
-        >
-          {title}
-        </Typography>
-        <Stack sx={{ minHeight: 60 }}>
+        <Stack>
+          <Stack direction={"row"} alignItems="center" sx={{ pl: 1 }}>
+            <Typography
+              fontSize={14}
+              fontWeight={600}
+              color="text.primary"
+              sx={{ userSelect: "none" }}
+            >
+              {title}
+            </Typography>
+          </Stack>
+        </Stack>
+
+        <Stack sx={{ minHeight: 60 }} spacing={1}>
           {playlist.map((item: any) => (
             <CommonListItem
               key={item?.id}
@@ -37,7 +44,7 @@ const PlaylistView = ({
           ))}
         </Stack>
       </Stack>
-    </CardContent>
+    </Stack>
   );
 };
 

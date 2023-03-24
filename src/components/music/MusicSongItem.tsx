@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useCreation } from "ahooks";
 import React from "react";
+import { usePlayerModel } from "../../models/usePlayerModel";
 import { formatArtists, formatImageSize } from "../../utils";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
 
@@ -37,6 +38,7 @@ const MusicItemPrimary = ({ song }: IMusicSongItemProps) => {
 };
 
 const MusicSongItem = ({ song }: IMusicSongItemProps) => {
+  const { playMusic } = usePlayerModel();
   const { avatar, artist } = useCreation(() => {
     const avatar = formatImageSize(song.album.picUrl, 40);
     const artist = formatArtists(song.artists);
@@ -45,6 +47,9 @@ const MusicSongItem = ({ song }: IMusicSongItemProps) => {
 
   return (
     <ListItem
+      onClick={() => {
+        playMusic(song.id);
+      }}
       sx={{
         px: 1,
         py: 1,

@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { Stack, Typography, Box, Avatar, IconButton } from "@mui/material";
-import { useCreation, useSetState } from "ahooks";
-import React from "react";
+import { useCreation, useMemoizedFn, useSetState } from "ahooks";
+import React, { useRef } from "react";
 import { useUserModel } from "../models/useUserModel";
 import { getRecommendPlaylist } from "../services/playlist.service";
 import EllipsisText from "./common/EllipsisText/EllipsisText";
@@ -9,10 +9,33 @@ import EllipsisText from "./common/EllipsisText/EllipsisText";
 interface IRecommendResourceProps {}
 
 const RecommendResource = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const containerWidth =
+    containerRef.current?.getBoundingClientRect().width ?? 0;
+  const listWidth = listRef.current?.getBoundingClientRect().width ?? 0;
+
   const { user } = useUserModel();
   const uid = useCreation(() => user.userInfo?.id, [user]);
   const [state, setState] = useSetState({
     list: [] as any[],
+  });
+
+  const next = useMemoizedFn(() => {
+    const currentScrollLeft = containerRef.current?.scrollLeft ?? 0;
+    containerRef.current?.scrollTo({
+      left: currentScrollLeft + containerWidth,
+      behavior: "smooth",
+    });
+  });
+
+  const prev = useMemoizedFn(() => {
+    const currentScrollLeft = containerRef.current?.scrollLeft ?? 0;
+    containerRef.current?.scrollTo({
+      left: currentScrollLeft - containerWidth,
+      behavior: "smooth",
+    });
   });
 
   useCreation(async () => {
@@ -39,6 +62,7 @@ const RecommendResource = () => {
             sx={{ boxShadow: (theme) => theme.shadows[1] }}
             color="primary"
             size="small"
+            onClick={prev}
           >
             <ChevronLeft />
           </IconButton>
@@ -46,12 +70,14 @@ const RecommendResource = () => {
             sx={{ boxShadow: (theme) => theme.shadows[1] }}
             color="primary"
             size="small"
+            onClick={next}
           >
             <ChevronRight />
           </IconButton>
         </Stack>
       </Stack>
       <Box
+        ref={containerRef}
         sx={{
           minHeight: 120,
           overflow: "auto",
@@ -65,7 +91,7 @@ const RecommendResource = () => {
           },
         }}
       >
-        <Stack direction={"row"} spacing={2}>
+        <Stack direction={"row"} spacing={2} ref={listRef}>
           {state.list.map((item) => (
             <Stack key={item.id} spacing={1} sx={{ width: 180 }}>
               <Avatar

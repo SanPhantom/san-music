@@ -1,17 +1,21 @@
-import { useLatest, useSetState } from "ahooks";
+import { useCreation, useLatest, useMemoizedFn, useSetState } from "ahooks";
 import { createStore } from "hox";
 import { checkSongPlay, getSongUrl } from "../services/music.service";
 
 export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
   const [state, setState] = useSetState({
     loading: false,
+    currentTime: 0,
+    duration: 0,
+    isPlaying: false,
     player: new Audio(),
   });
 
-  const currentTimeRef = useLatest(state.player.currentTime);
-  const durationRef = useLatest(state.player.duration);
+  const currentTimeRef = useLatest(state.currentTime);
+  const durationRef = useLatest(state.duration);
+  const playerStatusRef = useLatest(state.isPlaying);
 
-  const playMusic = async (id: string) => {
+  const playMusic = useMemoizedFn(async (id: string) => {
     const res = await checkSongPlay(id);
     if (res.success) {
       const { data } = await getSongUrl(id);
@@ -21,36 +25,71 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
       state.player.play();
     }
     return null;
-  };
-
-  /** 正在播放中 */
-  state.player.addEventListener("playing", () => {});
-
-  state.player.addEventListener("canplay", () => {
-    setState({
-      loading: false,
-    });
   });
 
-  /** waiting */
-  state.player.addEventListener("waiting", () => {
-    setState({
-      loading: true,
+  useCreation(() => {
+    /** 正在播放中 */
+    state.player.addEventListener("playing", () => {
+      setState({
+        isPlaying: true,
+      });
     });
-  });
 
-  /** pause */
-  state.player.addEventListener("pause", () => {});
+    state.player.addEventListener("canplay", () => {
+      setState({
+        loading: false,
+        isPlaying: true,
+      });
+    });
 
-  state.player.addEventListener("seeking", () => {});
+    /** waiting */
+    state.player.addEventListener("waiting", () => {
+      setState({
+        loading: true,
+      });
+    });
 
-  state.player.addEventListener("ended", () => {});
+    /** pause */
+    state.player.addEventListener("pause", () => {
+      console.log(Date.now());
+      setState({
+        isPlaying: false,
+      });
+    });
+
+    state.player.addEventListener("seeking", () => {});
+
+    state.player.addEventListener("ended", () => {
+      setState({
+        isPlaying: false,
+      });
+    });
+
+    state.player.addEventListener("timeupdate", () => {
+      setState({
+        currentTime: state.player.currentTime * 1000,
+        duration: state.player.duration * 1000,
+      });
+    });
+
+    return () => {
+      state.player.removeEventListener("timeupdate", () => {});
+      state.player.removeEventListener("playing", () => {});
+      state.player.removeEventListener("play", () => {});
+      state.player.removeEventListener("seeked", () => {});
+      state.player.removeEventListener("ended", () => {});
+      state.player.removeEventListener("pause", () => {});
+      state.player.removeEventListener("canplay", () => {});
+      state.player.removeEventListener("waiting", () => {});
+    };
+  }, [state.player]);
 
   return {
     player: state.player,
     loading: state.loading,
     currentTime: currentTimeRef.current,
     duration: durationRef.current,
+    isPlaying: playerStatusRef.current,
     playMusic,
   };
 });

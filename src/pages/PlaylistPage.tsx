@@ -1,12 +1,4 @@
-import { useCreation, useLatest, useMemoizedFn, useRequest } from "ahooks";
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  getPlaylistDetail,
-  getPlaylistSongs,
-} from "../services/playlist.service";
-import { isEmpty } from "ramda";
-import Loading from "../components/common/Loading";
+import { PlayCircle, Queue, Share } from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -17,16 +9,17 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { formatImageSize } from "../utils";
+import { useCreation, useLatest, useMemoizedFn, useRequest } from "ahooks";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import EllipsisText from "../components/common/EllipsisText/EllipsisText";
+import Loading from "../components/common/Loading";
 import MusicSongItem from "../components/music/MusicSongItem";
 import {
-  Collections,
-  PlayArrow,
-  PlayCircle,
-  Queue,
-  Share,
-} from "@mui/icons-material";
+  getPlaylistDetail,
+  getPlaylistSongs,
+} from "../services/playlist.service";
+import { formatImageSize, numeral } from "../utils";
 
 const PlaylistPage = () => {
   const { id } = useParams();
@@ -126,7 +119,9 @@ const PlaylistPage = () => {
                     icon={<Share fontSize={"small"} />}
                     label={
                       <Typography variant="body2">
-                        {playlistRef.current?.shareCount}
+                        {numeral(playlistRef.current?.shareCount).format(
+                          "0.0a"
+                        )}
                       </Typography>
                     }
                     sx={{ px: 1.5 }}
@@ -135,7 +130,9 @@ const PlaylistPage = () => {
                     icon={<Queue fontSize={"small"} />}
                     label={
                       <Typography variant="body2">
-                        {playlistRef.current?.subscribedCount}
+                        {numeral(playlistRef.current?.subscribedCount).format(
+                          "0.0a"
+                        )}
                       </Typography>
                     }
                     sx={{ px: 1.5 }}

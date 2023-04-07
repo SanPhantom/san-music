@@ -38,7 +38,6 @@ const Layout = ({ children }: ILayoutProps) => {
           >
             San Music World
           </Typography>
-          <UserInfo />
         </Toolbar>
       </AppBar>
       <Stack sx={{ flexGrow: 1, height: "100%" }}>

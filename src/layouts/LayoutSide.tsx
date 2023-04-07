@@ -12,6 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useCreation } from "ahooks";
 import menus from "../config/menu.config";
 import UserPlaylist from "../components/UserPlaylist";
+import UserInfo from "../components/UserInfo";
 
 interface ILayoutSideProps {}
 
@@ -22,16 +23,20 @@ const LayoutSide = () => {
     <Drawer
       variant="permanent"
       sx={{
-        width: 280,
+        width: 230,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: 280, boxSizing: "border-box" },
+        [`& .MuiDrawer-paper`]: { width: 230, boxSizing: "border-box" },
       }}
     >
       <Toolbar />
       <Stack
         sx={{ flex: 1, display: "flex", minHeight: 0, flexDirection: "column" }}
       >
-        <Stack p={2} spacing={1}>
+        <Stack sx={{ py: 2, px: 1.5 }}>
+          <UserInfo />
+        </Stack>
+        <Divider />
+        <Stack p={1.5} spacing={1}>
           {menus.map((menu, index) => {
             return (
               <Link to={menu.path}>
@@ -66,45 +71,7 @@ const LayoutSide = () => {
             );
           })}
         </Stack>
-        <Divider />
-        <Stack
-          sx={{
-            flex: 1,
-            minHeight: 0,
-            overflow: "auto",
-            py: 2,
-            ["&::-webkit-scrollbar"]: {
-              width: 4,
-            },
-            ["&::-webkit-scrollbar-thumb"]: {
-              width: 4,
-              background: (theme) => theme.palette.primary.main,
-              borderRadius: 2,
-            },
-          }}
-        >
-          <UserPlaylist />
-        </Stack>
       </Stack>
-      {/* <Stack
-        alignItems={"center"}
-        justifyContent={"center"}
-        sx={{
-          width: "100%",
-          minHeight: 45,
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: (theme) => alpha(theme.palette.common.black, 0.8),
-        }}
-      >
-        <MuiLink
-          href="https://beian.miit.gov.cn/"
-          target="_blank"
-          sx={{ fontSize: 12 }}
-        >
-          Copyright © 2023 - 2024 by SanPhantom
-        </MuiLink>
-      </Stack> */}
-      {/* <Box sx={{ width: "100%", height: 45 }} /> */}
     </Drawer>
   );
 };

@@ -1,7 +1,8 @@
-import { Avatar, Button, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserModel } from "../models/useUserModel";
+import { ChevronRight } from "@mui/icons-material";
 
 interface IUserInfoProps {}
 
@@ -11,25 +12,28 @@ const UserInfo = () => {
   const { isLogin, isAnonymous, userInfo } = user;
   const noLogin = !isLogin || isAnonymous;
   return (
-    <div>
-      {noLogin ? (
-        <Button
-          color="inherit"
-          onClick={() => {
+    <Box>
+      <Stack
+        direction={"row"}
+        alignItems="center"
+        spacing={1}
+        justifyContent={"space-between"}
+        onClick={() => {
+          if (noLogin) {
             navigate("/login");
-          }}
-        >
-          Sign In
-        </Button>
-      ) : (
+          }
+        }}
+      >
         <Stack direction={"row"} alignItems="center" spacing={1}>
-          <Avatar src={userInfo?.avatar} />
-          <Typography variant="body2" fontWeight={600}>
-            {userInfo?.nickname}
+          <Avatar src={noLogin ? undefined : userInfo?.avatar} />
+          <Typography variant="body2">
+            {noLogin ? "登录/注册" : userInfo?.nickname}
           </Typography>
         </Stack>
-      )}
-    </div>
+
+        <ChevronRight />
+      </Stack>
+    </Box>
   );
 };
 

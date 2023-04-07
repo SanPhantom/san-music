@@ -9,7 +9,7 @@ export const checkSongPlay = (id: string) => {
 };
 
 export const getSongUrl = (id: string) => {
-  return musicAxios.get<any, any>("/song/url/v1", {
+  return musicAxios.get<any, any>("/song/url", {
     params: {
       id,
       level: "lossless",

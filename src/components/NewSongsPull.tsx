@@ -39,7 +39,7 @@ const NewSongsPull = () => {
                   alpha(theme.palette.text.secondary, 0.1),
               }}
             >
-              {data?.result.slice(0, 5).map((item: any) => (
+              {(data?.result ?? []).slice(0, 5).map((item: any) => (
                 <MusicSongItem song={item.song} />
               ))}
             </Stack>
@@ -55,7 +55,7 @@ const NewSongsPull = () => {
                   alpha(theme.palette.text.secondary, 0.1),
               }}
             >
-              {data?.result.slice(5, 10).map((item: any) => (
+              {(data?.result ?? []).slice(5, 10).map((item: any) => (
                 <MusicSongItem song={item.song} />
               ))}
             </Stack>

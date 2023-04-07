@@ -13,11 +13,13 @@ const request = axios.create({
 
 request.interceptors.request.use(async (config) => {
   const { method } = config;
+  const cookie = await getLocalItem("m_cookie");
+  // cookie.os = "pc";
   switch (method && method.toUpperCase()) {
     case "GET":
       config.params = {
         ...config.params,
-        cookie: await getLocalItem("m_cookie"),
+        cookie: encodeURIComponent(cookie),
       };
       break;
     case "POST":

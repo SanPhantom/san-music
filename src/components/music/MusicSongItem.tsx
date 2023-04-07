@@ -14,6 +14,7 @@ import EllipsisText from "../common/EllipsisText/EllipsisText";
 
 interface IMusicSongItemProps {
   song: any;
+  index?: number;
 }
 
 const MusicItemPrimary = ({ song }: IMusicSongItemProps) => {
@@ -26,22 +27,30 @@ const MusicItemPrimary = ({ song }: IMusicSongItemProps) => {
       >
         {song.name}
       </Typography>
-      {song.alias.length > 0 && (
+      {(song.alias || song.alia).length > 0 && (
         <Typography
           component={"span"}
           variant="body2"
           color={"text.disabled"}
-        >{` - ${song.alias[0]}`}</Typography>
+        >{` - ${(song.alias || song.alia)[0]}`}</Typography>
       )}
     </EllipsisText>
   );
 };
 
-const MusicSongItem = ({ song }: IMusicSongItemProps) => {
+const MusicSongItem = ({ song, index }: IMusicSongItemProps) => {
   const { playMusic } = usePlayerModel();
   const { avatar, artist } = useCreation(() => {
-    const avatar = formatImageSize(song.album.picUrl, 40);
-    const artist = formatArtists(song.artists);
+    let avatar = "";
+    let artist = "";
+    if (song.album && song.artists) {
+      avatar = formatImageSize(song.album.picUrl, 40);
+      artist = formatArtists(song.artists);
+    } else {
+      avatar = formatImageSize(song.al.picUrl, 40);
+      artist = formatArtists(song.ar);
+    }
+
     return { avatar, artist };
   }, [song]);
 

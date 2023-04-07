@@ -3,52 +3,51 @@ import { createStore } from "hox";
 import { checkSongPlay, getSongUrl } from "../services/music.service";
 
 export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
-  const player = new Audio();
-
   const [state, setState] = useSetState({
     loading: false,
+    player: new Audio(),
   });
 
-  const currentTimeRef = useLatest(player.currentTime);
-  const durationRef = useLatest(player.duration);
+  const currentTimeRef = useLatest(state.player.currentTime);
+  const durationRef = useLatest(state.player.duration);
 
   const playMusic = async (id: string) => {
     const res = await checkSongPlay(id);
     if (res.success) {
       const { data } = await getSongUrl(id);
       const url = data[0].url;
-      player.src = url;
-      player.load();
-      player.play();
+      state.player.src = url;
+      state.player.load();
+      state.player.play();
     }
     return null;
   };
 
   /** 正在播放中 */
-  player.addEventListener("playing", () => {});
+  state.player.addEventListener("playing", () => {});
 
-  player.addEventListener("canplay", () => {
+  state.player.addEventListener("canplay", () => {
     setState({
       loading: false,
     });
   });
 
   /** waiting */
-  player.addEventListener("waiting", () => {
+  state.player.addEventListener("waiting", () => {
     setState({
       loading: true,
     });
   });
 
   /** pause */
-  player.addEventListener("pause", () => {});
+  state.player.addEventListener("pause", () => {});
 
-  player.addEventListener("seeking", () => {});
+  state.player.addEventListener("seeking", () => {});
 
-  player.addEventListener("ended", () => {});
+  state.player.addEventListener("ended", () => {});
 
   return {
-    player,
+    player: state.player,
     loading: state.loading,
     currentTime: currentTimeRef.current,
     duration: durationRef.current,

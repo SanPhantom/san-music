@@ -17,3 +17,25 @@ export const getRecommendSongs = () => {
 export const newSongExpress = () => {
   return musicAxios.get<any, any>("/personalized/newsong", {});
 };
+
+export const getPlaylistDetail = (id: string) => {
+  return musicAxios.get<any, any>("/playlist/detail", {
+    params: {
+      id,
+    },
+  });
+};
+
+export const getPlaylistSongs = (
+  id: string,
+  page: number,
+  pageSize: number
+) => {
+  return musicAxios.get("/playlist/track/all", {
+    params: {
+      id,
+      limit: pageSize,
+      offset: pageSize * page,
+    },
+  });
+};

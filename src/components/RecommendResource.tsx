@@ -5,12 +5,14 @@ import React, { useRef } from "react";
 import { useUserModel } from "../models/useUserModel";
 import { getRecommendPlaylist } from "../services/playlist.service";
 import EllipsisText from "./common/EllipsisText/EllipsisText";
+import { useNavigate } from "react-router-dom";
 
 interface IRecommendResourceProps {}
 
 const RecommendResource = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const containerWidth =
     containerRef.current?.getBoundingClientRect().width ?? 0;
@@ -93,7 +95,12 @@ const RecommendResource = () => {
       >
         <Stack direction={"row"} spacing={2} ref={listRef}>
           {state.list.map((item) => (
-            <Stack key={item.id} spacing={1} sx={{ width: 180 }}>
+            <Stack
+              key={item.id}
+              spacing={1}
+              sx={{ width: 180 }}
+              onClick={() => navigate(`/playlist/${item.id}`)}
+            >
               <Avatar
                 src={item.picUrl}
                 variant="rounded"

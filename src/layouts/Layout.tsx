@@ -37,9 +37,10 @@ const Layout = ({ children }: ILayoutProps) => {
             noWrap
             component="div"
             color={"common.white"}
+            fontWeight={600}
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            San Music World
+            San Music
           </Typography>
         </Toolbar>
       </AppBar>

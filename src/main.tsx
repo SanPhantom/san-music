@@ -14,7 +14,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [].join(","),
+    fontFamily: ["serif"].join(","),
   },
   components: {
     MuiButton: {

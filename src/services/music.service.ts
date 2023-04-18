@@ -16,3 +16,11 @@ export const getSongUrl = (id: string) => {
     },
   });
 };
+
+export const getSongDetail = (ids: string) => {
+  return musicAxios.get<any, any>("/song/detail", {
+    params: {
+      ids,
+    },
+  });
+};

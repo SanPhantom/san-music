@@ -13,12 +13,15 @@ import MusicMiniPlayer from "../components/music/MusicMiniPlayer";
 import UserInfo from "../components/UserInfo";
 import "./layout.less";
 import LayoutSide from "./LayoutSide";
+import { useMusicModel } from "../models/useMusicModel";
 
 interface ILayoutProps {
   children?: React.ReactNode;
 }
 
 const Layout = ({ children }: ILayoutProps) => {
+  const { currentSongId } = useMusicModel();
+
   return (
     <Stack sx={{ width: "100%", height: "100%" }}>
       <AppBar
@@ -48,7 +51,7 @@ const Layout = ({ children }: ILayoutProps) => {
             <Box component={"main"} sx={{ flex: 1, overflow: "auto", py: 2 }}>
               <Container>{children}</Container>
             </Box>
-            <MusicMiniPlayer />
+            {currentSongId !== null && <MusicMiniPlayer />}
           </Stack>
         </Stack>
       </Stack>

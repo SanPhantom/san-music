@@ -1,11 +1,9 @@
-import curNumeral from "numeral";
-
 export const formatImageSize = (url: string, size: number) => {
   return `${url}?param=${size}y${size}`;
 };
 
 export const formatArtists = (artists: any[]) => {
-  return artists.map((d) => d.name).join("/");
+  return artists.map((d) => d.name).join(" / ");
 };
 
 export const transNumber = (num: number) => {
@@ -13,24 +11,18 @@ export const transNumber = (num: number) => {
   return numStr.replace(/(\d)(?=(?:\d{3})+$)/g, "$1,");
 };
 
-curNumeral.register("locale", "cn", {
-  delimiters: {
-    thousands: ",",
-    decimal: ".",
-  },
-  abbreviations: {
-    thousand: "千",
-    million: "百万",
-    billion: "十亿",
-    trillion: "兆",
-  },
-  ordinal: function (number) {
-    return number === 1 ? "er" : "ème";
-  },
-  currency: {
-    symbol: "￥",
-  },
-});
-curNumeral.locale("cn");
+export const transTime = (time: number = 0) => {
+  let min = Math.floor(time / 1000 / 60) ?? 0;
+  let sec = Math.ceil((time / 1000) % 60) ?? 0;
 
-export const numeral = curNumeral;
+  if (sec >= 60) {
+    min++;
+    sec = 0;
+  }
+
+  const format = (num: number) => {
+    return num < 10 ? `0${num}` : num;
+  };
+
+  return `${format(min)}:${format(sec)}`;
+};

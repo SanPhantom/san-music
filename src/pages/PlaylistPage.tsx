@@ -19,7 +19,7 @@ import {
   getPlaylistDetail,
   getPlaylistSongs,
 } from "../services/playlist.service";
-import { formatImageSize, numeral } from "../utils";
+import { formatImageSize } from "../utils";
 
 const PlaylistPage = () => {
   const { id } = useParams();
@@ -119,9 +119,7 @@ const PlaylistPage = () => {
                     icon={<Share fontSize={"small"} />}
                     label={
                       <Typography variant="body2">
-                        {numeral(playlistRef.current?.shareCount).format(
-                          "0.0a"
-                        )}
+                        {playlistRef.current?.shareCount}
                       </Typography>
                     }
                     sx={{ px: 1.5 }}
@@ -130,9 +128,7 @@ const PlaylistPage = () => {
                     icon={<Queue fontSize={"small"} />}
                     label={
                       <Typography variant="body2">
-                        {numeral(playlistRef.current?.subscribedCount).format(
-                          "0.0a"
-                        )}
+                        {playlistRef.current?.subscribedCount}
                       </Typography>
                     }
                     sx={{ px: 1.5 }}

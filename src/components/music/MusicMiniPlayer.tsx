@@ -1,5 +1,7 @@
 import {
+  Avatar,
   Box,
+  CircularProgress,
   Container,
   IconButton,
   LinearProgress,
@@ -8,16 +10,17 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { usePlayerModel } from "../../models/usePlayerModel";
 import { ReactComponent as BoFangIcon } from "../../assets/icon/-bofang.svg";
 import { ReactComponent as NextMusicIcon } from "../../assets/icon/-xiayishou.svg";
 import { ReactComponent as ZanTingIcon } from "../../assets/icon/-zanting.svg";
-
-interface IMusicMiniPlayerProps {}
+import { usePlayerModel } from "../../models/usePlayerModel";
+import { transTime } from "../../utils";
+import { useMusicModel } from "../../models/useMusicModel";
+import EllipsisText from "../common/EllipsisText/EllipsisText";
 
 const MusicMiniPlayer = () => {
   const { currentTime, duration, player, isPlaying } = usePlayerModel();
+  const { musicInfo } = useMusicModel();
 
   return (
     <Toolbar
@@ -39,15 +42,47 @@ const MusicMiniPlayer = () => {
           left: 0,
         }}
       />
-      <Container sx={{ height: "100%" }}>
+      <Stack sx={{ height: "100%", width: "100%" }}>
         <Stack
           direction="row"
           justifyContent={"space-between"}
           alignItems="center"
           sx={{ height: "100%" }}
+          spacing={4}
         >
-          <Typography>123</Typography>
-          <Stack direction={"row"} spacing={1.5}>
+          <Stack direction={"row"} alignItems={"center"} spacing={1}>
+            <Avatar src={musicInfo?.pic} variant="rounded">
+              <CircularProgress size={16} />
+            </Avatar>
+            <Stack>
+              {musicInfo?.id && (
+                <EllipsisText variant="body2">
+                  <Typography
+                    component={"span"}
+                    variant="body2"
+                    color={false ? "primary.main" : ""}
+                  >
+                    {musicInfo?.name}
+                  </Typography>
+                  {musicInfo?.art && (
+                    <Typography
+                      component={"span"}
+                      variant="body2"
+                      color={"text.secondary"}
+                    >{` - ${musicInfo?.art}`}</Typography>
+                  )}
+                </EllipsisText>
+              )}
+              <Typography
+                variant="caption"
+                color={"text.secondary"}
+              >{`${transTime(currentTime)} / ${transTime(
+                duration
+              )}`}</Typography>
+            </Stack>
+          </Stack>
+
+          <Stack direction={"row"} spacing={1.5} alignItems={"center"}>
             <IconButton
               sx={{ m: 0, p: 0 }}
               onClick={() => {
@@ -74,7 +109,7 @@ const MusicMiniPlayer = () => {
             </IconButton>
           </Stack>
         </Stack>
-      </Container>
+      </Stack>
     </Toolbar>
   );
 };

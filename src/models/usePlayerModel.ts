@@ -1,8 +1,12 @@
 import { useCreation, useLatest, useMemoizedFn, useSetState } from "ahooks";
 import { createStore } from "hox";
 import { checkSongPlay, getSongUrl } from "../services/music.service";
+import { useMusicModel } from "./useMusicModel";
+import { isEmpty } from "ramda";
 
 export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
+  const { setState: setMusicState } = useMusicModel();
+
   const [state, setState] = useSetState({
     loading: false,
     currentTime: 0,
@@ -16,14 +20,17 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
   const playerStatusRef = useLatest(state.isPlaying);
 
   const playMusic = useMemoizedFn(async (id: string) => {
-    const res = await checkSongPlay(id);
-    if (res.success) {
-      const { data } = await getSongUrl(id);
-      const url = data[0].url;
+    const { data } = await getSongUrl(id);
+    const url = data[0].url;
+    if (!isEmpty(url)) {
+      setMusicState({
+        currentSongId: id,
+      });
       state.player.src = url;
       state.player.load();
       state.player.play();
     }
+
     return null;
   });
 

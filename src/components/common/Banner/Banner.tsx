@@ -6,10 +6,8 @@ import {
   useDebounceFn,
   useLatest,
   useMemoizedFn,
-  useMount,
   usePrevious,
   useSetState,
-  useTimeout,
   useUpdateEffect,
 } from "ahooks";
 import React, { useRef } from "react";
@@ -31,21 +29,31 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
   const bannerRootWidth =
     bannerRootRef.current?.getBoundingClientRect()?.width ?? 0;
 
+  // banner translating
   const [isPlay, { setTrue: startPlay, setFalse: stopPlay }] = useBoolean(true);
   const [state, setState] = useSetState({
-    current: 1,
+    current: 0, // current banner number [0 ~~ list.length + 1]
   });
-  const currentRef = useLatest(state.current);
-  const prevCurrent = usePrevious(state.current);
+  const currentRef = useLatest(state.current); // latest current dot number
+  const prevCurrent = usePrevious(state.current); // previous current dot number
 
   const isInterface = useCreation(() => {
-    const result = currentRef.current >= list.length + 1 && isPlay;
+    const result =
+      (currentRef.current >= list.length + 1 || currentRef.current <= 0) &&
+      isPlay;
     return result;
   }, [currentRef.current, isPlay]);
 
+  // translate offset width
   const offsetWidth = useCreation(() => {
     return currentRef.current * bannerRootWidth;
   }, [currentRef.current, bannerRootWidth]);
+
+  const currentDot = useCreation(() => {
+    if (currentRef.current === 0) return list.length - 1;
+    if (currentRef.current === list.length + 1) return 0;
+    return currentRef.current - 1;
+  }, [currentRef.current, list]);
 
   const nextItem = useMemoizedFn(() => {
     setState({
@@ -53,24 +61,29 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
     });
   });
 
+  const prevItem = useMemoizedFn(() => {
+    setState({
+      current: currentRef.current - 1,
+    });
+  });
+
+  const { run: startNextItem } = useDebounceFn(
+    () => {
+      nextItem();
+    },
+    { wait: 2000 }
+  );
+
+  // banner translate complied
   const handleTransitionEnd = useMemoizedFn(() => {
     if (isInterface) {
       stopPlay();
       setState({
-        current: 1,
+        current: currentRef.current <= 0 ? list.length : 1,
       });
     }
     startNextItem();
   });
-
-  const { run: startNextItem, flush } = useDebounceFn(
-    () => {
-      nextItem();
-    },
-    {
-      wait: 2000,
-    }
-  );
 
   useUpdateEffect(() => {
     if (prevCurrent === 0 || prevCurrent === list.length + 1) {
@@ -78,7 +91,7 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
     }
   }, [prevCurrent]);
 
-  useUpdateEffect(() => {
+  useCreation(() => {
     startNextItem();
   }, [list]);
 
@@ -106,8 +119,9 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
                   key={`dot_${index}`}
                   className="banner-dot"
                   style={{
+                    width: index === currentDot ? "24px" : "16px",
                     backgroundColor:
-                      index === currentRef.current - 1
+                      index === currentDot
                         ? theme.palette.primary.main
                         : theme.palette.grey[50],
                   }}
@@ -118,7 +132,7 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
           <div className="banner-control-container">
             <div
               className="banner-control-item banner-control-left"
-              // onClick={prevItem}
+              onClick={prevItem}
             >
               <ChevronLeft color="primary" />
             </div>

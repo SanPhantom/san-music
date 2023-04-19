@@ -38,6 +38,7 @@ const Layout = ({ children }: ILayoutProps) => {
             component="div"
             color={"common.white"}
             fontWeight={600}
+            fontSize={24}
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
             San Music

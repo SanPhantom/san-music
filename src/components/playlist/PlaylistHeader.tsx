@@ -21,8 +21,8 @@ const PlaylistHeader = ({ info }: IPlaylistHeaderProps) => {
       >
         <Box sx={{ position: "relative" }}>
           <Avatar
-            src={formatImageSize(info?.coverImgUrl, 168)}
-            sx={{ width: 168, height: 168 }}
+            src={formatImageSize(info?.coverImgUrl, 180)}
+            sx={{ width: 180, height: 180 }}
             alt=""
             variant="rounded"
           />
@@ -30,7 +30,7 @@ const PlaylistHeader = ({ info }: IPlaylistHeaderProps) => {
         <Stack
           spacing={1.5}
           justifyContent={"space-between"}
-          sx={{ height: 168, py: 0.5 }}
+          sx={{ height: 180, py: 0.5 }}
         >
           <Stack spacing={1.5}>
             <EllipsisText
@@ -66,16 +66,20 @@ const PlaylistHeader = ({ info }: IPlaylistHeaderProps) => {
             <Chip
               icon={<Share fontSize={"small"} />}
               label={
-                <Typography variant="body2">{info?.shareCount}</Typography>
+                <Typography variant="body1" fontWeight={600}>
+                  {info?.shareCount}
+                </Typography>
               }
-              sx={{ px: 1.5 }}
+              sx={{ px: 1 }}
             />
             <Chip
               icon={<Queue fontSize={"small"} />}
               label={
-                <Typography variant="body2">{info?.subscribedCount}</Typography>
+                <Typography variant="body1" fontWeight={600}>
+                  {info?.subscribedCount}
+                </Typography>
               }
-              sx={{ px: 1.5 }}
+              sx={{ px: 1 }}
             />
           </Stack>
         </Stack>

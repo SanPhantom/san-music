@@ -58,7 +58,6 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
 
     /** pause */
     state.player.addEventListener("pause", () => {
-      console.log(Date.now());
       setState({
         isPlaying: false,
       });

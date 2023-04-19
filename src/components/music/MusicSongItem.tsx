@@ -1,24 +1,22 @@
+import { MoreVert } from "@mui/icons-material";
 import {
-  ListItem,
-  alpha,
-  ListItemAvatar,
   Avatar,
-  ListItemText,
-  Typography,
-  Stack,
-  ListItemSecondaryAction,
   IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { useCreation } from "ahooks";
-import React from "react";
+import { isEmpty } from "ramda";
+import LoadingGif from "../../assets/loading.gif";
 import { useMusicModel } from "../../models/useMusicModel";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { formatArtists, formatImageSize } from "../../utils";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
-import LoadingGif from "../../assets/loading.gif";
 import Image from "../common/Image/Image";
-import { isEmpty } from "ramda";
-import { Menu, MoreVert } from "@mui/icons-material";
 
 interface IMusicSongItemProps {
   song: any;
@@ -87,10 +85,10 @@ const MusicSongItem = ({
         onItemClick?.(song);
       }}
       sx={{
-        px: 1,
+        px: 0.5,
         py: 1,
         cursor: "pointer",
-        borderRadius: 1,
+        borderRadius: 2,
         "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)",
         ["&:active"]: {
           backgroundColor: "transparent",
@@ -112,96 +110,100 @@ const MusicSongItem = ({
         ),
       })}
     >
-      {avatar && (
-        <ListItemAvatar sx={{ minWidth: 50 }}>
-          {index ? (
-            <Typography
-              component={Stack}
-              variant="body2"
-              justifyContent={"center"}
-              alignItems="center"
+      <ListItemButton sx={{ borderRadius: 2, px: 0 }}>
+        {avatar && (
+          <ListItemAvatar sx={{ minWidth: 50 }}>
+            {index ? (
+              <Typography
+                component={Stack}
+                variant="body2"
+                justifyContent={"center"}
+                alignItems="center"
+              >
+                {song.id === currentSongId ? (
+                  <Image src={LoadingGif} style={{ width: 20 }} />
+                ) : (
+                  index
+                )}
+              </Typography>
+            ) : (
+              <Avatar
+                src={`${avatar}`}
+                variant="rounded"
+                sx={{
+                  width: 40,
+                  height: 40,
+                  boxShadow: (theme) => theme.shadows[1],
+                }}
+              />
+            )}
+          </ListItemAvatar>
+        )}
+        <ListItemText
+          sx={{ my: 0 }}
+          primary={<MusicItemPrimary song={song} />}
+          secondary={
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"flex-start"}
+              spacing={0.5}
             >
-              {song.id === currentSongId ? (
-                <Image src={LoadingGif} style={{ width: 20 }} />
-              ) : (
-                index
+              {isVip && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    border: 1,
+                    lineHeight: 1,
+                    px: 0.25,
+                    color: "primary.main",
+                    borderRadius: 0.5,
+                  }}
+                >
+                  VIP
+                </Typography>
               )}
-            </Typography>
-          ) : (
-            <Avatar
-              src={`${avatar}`}
-              variant="rounded"
-              sx={{
-                width: 40,
-                height: 40,
-                boxShadow: (theme) => theme.shadows[1],
-              }}
-            />
-          )}
-        </ListItemAvatar>
-      )}
-      <ListItemText
-        sx={{ my: 0 }}
-        primary={<MusicItemPrimary song={song} />}
-        secondary={
-          <Stack
-            direction={"row"}
-            alignItems={"center"}
-            justifyContent={"flex-start"}
-            spacing={0.5}
-          >
-            {isVip && (
-              <Typography
-                variant="caption"
-                sx={{
-                  border: 1,
-                  lineHeight: 1,
-                  px: 0.25,
-                  color: "primary.main",
-                  borderRadius: 0.5,
-                }}
-              >
-                VIP
+              {isCover && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    border: 1,
+                    lineHeight: 1,
+                    px: 0.25,
+                    py: 0.21,
+                    color: "primary.main",
+                    borderRadius: 0.5,
+                  }}
+                >
+                  翻唱
+                </Typography>
+              )}
+              {isCopyright && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    border: 1,
+                    lineHeight: 1,
+                    px: 0.25,
+                    py: 0.21,
+                    color: "text.disabled",
+                    borderRadius: 0.5,
+                  }}
+                >
+                  暂无版权
+                </Typography>
+              )}
+              <Typography variant="body2" color="text.secondary">
+                {artist}
+                {isCover &&
+                  `(原唱：${formatArtists(
+                    song.originSongSimpleData?.artists
+                  )})`}
               </Typography>
-            )}
-            {isCover && (
-              <Typography
-                variant="caption"
-                sx={{
-                  border: 1,
-                  lineHeight: 1,
-                  px: 0.25,
-                  py: 0.21,
-                  color: "primary.main",
-                  borderRadius: 0.5,
-                }}
-              >
-                翻唱
-              </Typography>
-            )}
-            {isCopyright && (
-              <Typography
-                variant="caption"
-                sx={{
-                  border: 1,
-                  lineHeight: 1,
-                  px: 0.25,
-                  py: 0.21,
-                  color: "text.disabled",
-                  borderRadius: 0.5,
-                }}
-              >
-                暂无版权
-              </Typography>
-            )}
-            <Typography variant="body2" color="text.secondary">
-              {artist}
-              {isCover &&
-                `(原唱：${formatArtists(song.originSongSimpleData?.artists)})`}
-            </Typography>
-          </Stack>
-        }
-      />
+            </Stack>
+          }
+        />
+      </ListItemButton>
     </ListItem>
   );
 };

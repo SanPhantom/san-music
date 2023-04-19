@@ -1,27 +1,19 @@
 import { Box, Typography } from "@mui/material";
-import { useCreation, useMemoizedFn, useMount, useSetState } from "ahooks";
-import React from "react";
+import { useCreation, useRequest } from "ahooks";
 import { banner } from "../../services/common.service";
 import Banner from "../common/Banner/Banner";
 import Image from "../common/Image/Image";
-
-interface IMusicBannerProps {}
+import LoadingView from "../common/LoadingView";
 
 const MusicBanner = () => {
-  const [state, setState] = useSetState({
-    banners: [] as any[],
+  const { data, loading } = useRequest(banner, {
+    manual: false,
+    defaultParams: [{ type: 0 }],
   });
 
-  const getBanners = useMemoizedFn(async () => {
-    const bannerRes = await banner({ type: 0 });
-    return bannerRes.banners;
-  });
-
-  useMount(async () => {
-    setState({
-      banners: await getBanners(),
-    });
-  });
+  const banners = useCreation(() => {
+    return data?.banners ?? [];
+  }, [data]);
 
   return (
     <Box
@@ -35,38 +27,40 @@ const MusicBanner = () => {
         pb: "calc(100% * (10 / 27) )",
       }}
     >
-      <Banner
-        list={state.banners}
-        renderItem={(item, index) => (
-          <Box
-            key={`${item.encodeId}_${index}`}
-            sx={{
-              width: "100%",
-              position: "relative",
-              cursor: "pointer",
-              fontSize: 0,
-              borderRadius: 1,
-              overflow: "hidden",
-            }}
-          >
-            <Image src={item.imageUrl} alt="" />
+      <LoadingView loading={loading} minHeight={120}>
+        <Banner
+          list={banners}
+          renderItem={(item, index) => (
             <Box
+              key={`${item.encodeId}_${index}`}
               sx={{
-                backgroundColor: item.titleColor,
-                color: "#ffffff",
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                px: 2,
-                py: 0.5,
-                borderTopLeftRadius: 8,
+                width: "100%",
+                position: "relative",
+                cursor: "pointer",
+                fontSize: 0,
+                borderRadius: 1,
+                overflow: "hidden",
               }}
             >
-              <Typography fontSize={14}>{item.typeTitle}</Typography>
+              <Image src={item.imageUrl} alt="" />
+              <Box
+                sx={{
+                  backgroundColor: item.titleColor,
+                  color: "#ffffff",
+                  position: "absolute",
+                  bottom: 0,
+                  right: 0,
+                  px: 2,
+                  py: 0.5,
+                  borderTopLeftRadius: 8,
+                }}
+              >
+                <Typography fontSize={14}>{item.typeTitle}</Typography>
+              </Box>
             </Box>
-          </Box>
-        )}
-      />
+          )}
+        />
+      </LoadingView>
     </Box>
   );
 };

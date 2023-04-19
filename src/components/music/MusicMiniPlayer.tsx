@@ -87,7 +87,6 @@ const MusicMiniPlayer = () => {
               sx={{ m: 0, p: 0 }}
               onClick={() => {
                 if (isPlaying) {
-                  console.log(Date.now());
                   player.pause();
                 } else {
                   player.play();

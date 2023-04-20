@@ -4,6 +4,7 @@ import ErrorPage from "../pages/ErrorPage";
 import FindMusicPage from "../pages/FindMusicPage";
 import LoginPage from "../pages/LoginPage";
 import PlaylistPage from "../pages/PlaylistPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const routes = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const routes = createBrowserRouter([
       { path: "/music", element: <FindMusicPage />, id: "music" },
       { path: "/video", element: "video", id: "video" },
       { path: "/playlist/:id", element: <PlaylistPage />, id: "playlist" },
+      { path: "/profile", element: <ProfilePage />, id: "profile" },
     ],
   },
   {

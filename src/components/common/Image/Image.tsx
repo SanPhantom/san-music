@@ -1,7 +1,5 @@
-import React, { ImgHTMLAttributes } from "react";
+import React from "react";
 import "./image.less";
-
-interface IImageProps {}
 
 const Image = (
   props: React.DetailedHTMLProps<

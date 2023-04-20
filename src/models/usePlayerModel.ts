@@ -1,4 +1,11 @@
-import { useCreation, useLatest, useMemoizedFn, useSetState } from "ahooks";
+import {
+  useCreation,
+  useDebounceFn,
+  useLatest,
+  useMemoizedFn,
+  useSetState,
+  useThrottleFn,
+} from "ahooks";
 import { createStore } from "hox";
 import { checkSongPlay, getSongUrl } from "../services/music.service";
 import { useMusicModel } from "./useMusicModel";
@@ -33,6 +40,17 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
 
     return null;
   });
+
+  const { run: updateCurrentTime } = useThrottleFn(
+    () => {
+      setState({
+        currentTime: state.player.currentTime * 1000,
+      });
+    },
+    {
+      wait: 1000,
+    }
+  );
 
   useCreation(() => {
     /** 正在播放中 */
@@ -78,9 +96,7 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
     });
 
     state.player.addEventListener("timeupdate", () => {
-      setState({
-        currentTime: state.player.currentTime * 1000,
-      });
+      updateCurrentTime();
     });
 
     return () => {

@@ -22,6 +22,7 @@ const UserInfo = () => {
           if (noLogin) {
             navigate("/login");
           }
+          navigate("/profile");
         }}
       >
         <Stack direction={"row"} alignItems="center" spacing={1}>

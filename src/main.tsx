@@ -10,7 +10,7 @@ import { PlayerStoreProvider } from "./models/usePlayerModel";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#20c997",
+      main: "#4c8045",
     },
   },
   typography: {

@@ -3,6 +3,7 @@ import {
   AppBar,
   Box,
   Container,
+  IconButton,
   Link,
   Stack,
   Toolbar,
@@ -14,6 +15,8 @@ import UserInfo from "../components/UserInfo";
 import "./layout.less";
 import LayoutSide from "./LayoutSide";
 import { useMusicModel } from "../models/useMusicModel";
+import SearchInput from "../components/common/SearchInput";
+import { Email } from "@mui/icons-material";
 
 interface ILayoutProps {
   children?: React.ReactNode;
@@ -28,21 +31,23 @@ const Layout = ({ children }: ILayoutProps) => {
         position="fixed"
         sx={{
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          color: (theme) => theme.palette.common.white,
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ gap: 1.5 }}>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            color={"common.white"}
             fontWeight={600}
             fontSize={24}
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
             San Music
           </Typography>
+          <SearchInput />
+          <IconButton color="inherit">
+            <Email color="inherit" />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Stack sx={{ flexGrow: 1, height: "100%" }}>

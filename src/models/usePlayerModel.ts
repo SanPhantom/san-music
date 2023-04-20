@@ -16,7 +16,7 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
   });
 
   const currentTimeRef = useLatest(state.currentTime);
-  const durationRef = useLatest(state.duration);
+  const durationRef = useLatest(state.duration ?? 0);
   const playerStatusRef = useLatest(state.isPlaying);
 
   const playMusic = useMemoizedFn(async (id: string) => {
@@ -39,6 +39,12 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
     state.player.addEventListener("playing", () => {
       setState({
         isPlaying: true,
+      });
+    });
+
+    state.player.addEventListener("loadeddata", () => {
+      setState({
+        duration: state.player.duration * 1000,
       });
     });
 
@@ -74,7 +80,6 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
     state.player.addEventListener("timeupdate", () => {
       setState({
         currentTime: state.player.currentTime * 1000,
-        duration: state.player.duration * 1000,
       });
     });
 

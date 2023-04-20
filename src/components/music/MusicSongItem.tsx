@@ -1,22 +1,23 @@
-import { MoreVert } from "@mui/icons-material";
+import { MoreVert, VolumeUp } from "@mui/icons-material";
 import {
   Avatar,
+  Box,
   IconButton,
   ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
   Stack,
+  SvgIcon,
   Typography,
 } from "@mui/material";
 import { useCreation } from "ahooks";
 import { isEmpty } from "ramda";
-import LoadingGif from "../../assets/loading.gif";
 import { useMusicModel } from "../../models/useMusicModel";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { formatArtists, formatImageSize } from "../../utils";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
-import Image from "../common/Image/Image";
+import LoadingIcon from "../icons/LoadingIcon";
 
 interface IMusicSongItemProps {
   song: any;
@@ -89,7 +90,7 @@ const MusicSongItem = ({
         py: 1,
         cursor: "pointer",
         borderRadius: 2,
-        "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)",
+        WebkitTapHighlightColor: "rgba(0, 0, 0, 0)",
         ["&:active"]: {
           backgroundColor: "transparent",
         },
@@ -114,18 +115,20 @@ const MusicSongItem = ({
         {avatar && (
           <ListItemAvatar sx={{ minWidth: 50 }}>
             {index ? (
-              <Typography
-                component={Stack}
-                variant="body2"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Stack sx={{ alignItems: "center", justifyContent: "center" }}>
                 {song.id === currentSongId ? (
-                  <Image src={LoadingGif} style={{ width: 20 }} />
+                  <VolumeUp color="primary" sx={{ fontSize: 20 }} />
                 ) : (
-                  index
+                  <Typography
+                    component={Stack}
+                    variant="body2"
+                    justifyContent={"center"}
+                    alignItems="center"
+                  >
+                    {index}
+                  </Typography>
                 )}
-              </Typography>
+              </Stack>
             ) : (
               <Avatar
                 src={`${avatar}`}
@@ -142,6 +145,9 @@ const MusicSongItem = ({
         <ListItemText
           sx={{ my: 0 }}
           primary={<MusicItemPrimary song={song} />}
+          secondaryTypographyProps={{
+            component: Stack,
+          }}
           secondary={
             <Stack
               direction={"row"}

@@ -1,7 +1,5 @@
-import { Backdrop, Stack, Typography } from "@mui/material";
-import React from "react";
-import Image from "./Image/Image";
-import LoadingGif from "../../assets/loading.gif";
+import { Stack, Typography } from "@mui/material";
+import LoadingIcon from "../icons/LoadingIcon";
 
 interface ILoadingProps {}
 
@@ -11,9 +9,9 @@ const Loading = () => {
       direction={"row"}
       alignItems="center"
       justifyContent={"center"}
-      sx={{ pt: 2 }}
+      sx={{ pt: 2, gap: 2 }}
     >
-      <Image src={LoadingGif} style={{ width: 32 }} />
+      <LoadingIcon color="primary" />
       <Typography variant="body2" color={"primary.main"}>
         {"数据加载中..."}
       </Typography>

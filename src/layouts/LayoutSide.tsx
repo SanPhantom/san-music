@@ -39,7 +39,7 @@ const LayoutSide = () => {
         <Stack p={1.5} spacing={1}>
           {menus.map((menu, index) => {
             return (
-              <Link to={menu.path}>
+              <Link to={menu.path} key={menu.title}>
                 <CardContent
                   sx={{
                     px: 2,

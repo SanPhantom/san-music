@@ -84,6 +84,7 @@ const PlaylistPage = () => {
               <Stack>
                 {songs.map((item, index) => (
                   <MusicSongItem
+                    key={item.id}
                     showAction
                     song={item}
                     index={index + 1}

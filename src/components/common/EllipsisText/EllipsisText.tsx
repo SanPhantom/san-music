@@ -6,13 +6,13 @@ interface IEllipsisTextProps extends TypographyProps {
 }
 
 const EllipsisText = styled(({ line = 1, ...props }: IEllipsisTextProps) => (
-  <Typography {...props} sx={{ "-webkit-line-clamp": line?.toString() }} />
+  <Typography {...props} sx={{ "WebkitLineClamp? ": line?.toString() }} />
 ))(({ theme }) => ({
   width: "100%",
   textOverflow: "ellipsis",
   overflow: "hidden",
   display: "-webkit-box",
-  "-webkit-box-orient": "vertical",
+  WebkitBoxOrient: "vertical",
   userSelect: "none",
 }));
 

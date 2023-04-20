@@ -1,8 +1,6 @@
 import {
   Avatar,
-  Box,
   CircularProgress,
-  Container,
   IconButton,
   LinearProgress,
   Stack,
@@ -13,9 +11,9 @@ import {
 import { ReactComponent as BoFangIcon } from "../../assets/icon/-bofang.svg";
 import { ReactComponent as NextMusicIcon } from "../../assets/icon/-xiayishou.svg";
 import { ReactComponent as ZanTingIcon } from "../../assets/icon/-zanting.svg";
+import { useMusicModel } from "../../models/useMusicModel";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { transTime } from "../../utils";
-import { useMusicModel } from "../../models/useMusicModel";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
 
 const MusicMiniPlayer = () => {

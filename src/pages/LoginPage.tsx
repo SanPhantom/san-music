@@ -35,19 +35,20 @@ const LoginPage = () => {
       <LoginBg />
       <Stack alignItems={"center"} sx={{ pt: 18 }}>
         <Paper
+          component={Stack}
           elevation={1}
+          divider={<Divider sx={{ mx: -2 }} />}
           sx={{
             p: 2,
             maxWidth: 540,
             width: "100%",
             bgcolor: alpha(theme.palette.common.white, 1),
+            gap: 2,
           }}
         >
-          <Stack width={"100%"} spacing={2}>
-            <LoginTitle />
+          <LoginTitle />
 
-            <Divider sx={{ width: "100%" }} />
-
+          <Stack sx={{ gap: 2 }}>
             <Stack minHeight={200}>
               {state.isCode ? <LoginByQRCode /> : <LoginByEmail />}
             </Stack>

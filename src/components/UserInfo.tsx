@@ -18,9 +18,11 @@ const UserInfo = () => {
         alignItems="center"
         spacing={1}
         justifyContent={"space-between"}
+        sx={{ cursor: "pointer", userSelect: "none" }}
         onClick={() => {
           if (noLogin) {
             navigate("/login");
+            return;
           }
           navigate("/profile");
         }}

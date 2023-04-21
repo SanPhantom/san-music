@@ -9,7 +9,7 @@ import { Box, Divider, Stack } from "@mui/material";
 interface IUserPlaylistProps {}
 
 const UserPlaylist = () => {
-  const { user } = useUserModel();
+  const { user } = useUserModel((store) => [store.user]);
   const [state, setState] = useSetState({
     playlist: [] as any[],
   });

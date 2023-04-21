@@ -1,22 +1,14 @@
 import { PlayCircle } from "@mui/icons-material";
 import { Button, Divider, Paper, Stack } from "@mui/material";
-import {
-  useBoolean,
-  useCreation,
-  useLatest,
-  useMemoizedFn,
-  useRequest,
-} from "ahooks";
-import { useState } from "react";
+import { useCreation, useLatest, useMemoizedFn, useRequest } from "ahooks";
 import { useNavigate, useParams } from "react-router-dom";
-import Loading from "../components/common/Loading";
+import LoadingView from "../components/common/LoadingView";
 import MusicSongItem from "../components/music/MusicSongItem";
 import PlaylistHeader from "../components/playlist/PlaylistHeader";
 import {
   getPlaylistDetail,
   getPlaylistSongs,
 } from "../services/playlist.service";
-import LoadingView from "../components/common/LoadingView";
 
 const PlaylistPage = () => {
   const { id } = useParams();
@@ -25,28 +17,18 @@ const PlaylistPage = () => {
   const { data, run, loading } = useRequest(getPlaylistDetail, {
     manual: true,
   });
+  const {
+    data: songsRes,
+    run: requestSongs,
+    loading: songsLoading,
+  } = useRequest(getPlaylistSongs, { manual: true });
   const playlistRef = useLatest(data?.playlist);
-
-  const [songs, setSongs] = useState<any[]>([]);
-  const [songsLoading, { setTrue: startLoading, setFalse: closeLoading }] =
-    useBoolean(false);
-
-  const getSongs = useMemoizedFn(async (trackCount: number, id: string) => {
-    return Promise.all(
-      new Array(Math.ceil(trackCount / 150))
-        .fill(0)
-        .map((_, index: number) => getPlaylistSongs(id, index, 150))
-    );
-  });
 
   useCreation(async () => {
     if (playlistRef.current && id) {
       const trackCount = playlistRef.current?.trackCount ?? 0;
-      startLoading();
-      const res = await getSongs(trackCount, id);
-      const songList = res.map((item: any) => item.songs).flat();
-      setSongs(songList);
-      closeLoading();
+      console.log({ trackCount });
+      requestSongs(id, 0, trackCount);
     }
   }, [data]);
 
@@ -82,7 +64,7 @@ const PlaylistPage = () => {
             <Divider sx={{ my: 1.5, mx: -2 }} />
             <LoadingView loading={songsLoading}>
               <Stack>
-                {songs.map((item, index) => (
+                {songsRes?.songs.map((item: any, index: number) => (
                   <MusicSongItem
                     key={item.id}
                     showAction

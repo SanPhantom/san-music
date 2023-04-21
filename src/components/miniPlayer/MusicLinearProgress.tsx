@@ -2,10 +2,11 @@ import React from "react";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { LinearProgress } from "@mui/material";
 
-interface IMusicLinearProgressProps {}
-
 const MusicLinearProgress = () => {
-  const { currentTime, duration } = usePlayerModel();
+  const { currentTime, duration } = usePlayerModel((store) => [
+    store.currentTime,
+    store.duration,
+  ]);
   return (
     <LinearProgress
       variant="determinate"

@@ -54,8 +54,8 @@ const MusicSongItem = ({
   showAction = false,
   onItemClick,
 }: IMusicSongItemProps) => {
-  const { playMusic } = usePlayerModel();
-  const { currentSongId } = useMusicModel();
+  const { playMusic } = usePlayerModel((store) => [store.playMusic]);
+  const { currentSongId } = useMusicModel((store) => [store.currentSongId]);
   const { avatar, artist } = useCreation(() => {
     let avatar = "";
     let artist = "";

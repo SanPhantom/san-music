@@ -5,28 +5,41 @@ import FindMusicPage from "../pages/FindMusicPage";
 import LoginPage from "../pages/LoginPage";
 import PlaylistPage from "../pages/PlaylistPage";
 import ProfilePage from "../pages/ProfilePage";
+import LazyComponent from "./LazyComponent";
 
 const routes = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <ErrorPage />,
+    errorElement: <LazyComponent pageId="ErrorPage" />,
     shouldRevalidate: ({ currentUrl }) => {
       return currentUrl.pathname === "/user";
     },
     children: [
       { path: "/", element: <Navigate to={"/music"} replace /> },
       { path: "/user", element: "clear", id: "user" },
-      { path: "/music", element: <FindMusicPage />, id: "music" },
+      {
+        path: "/music",
+        element: <LazyComponent pageId="FindMusicPage" />,
+        id: "music",
+      },
       { path: "/video", element: "video", id: "video" },
-      { path: "/playlist/:id", element: <PlaylistPage />, id: "playlist" },
-      { path: "/profile", element: <ProfilePage />, id: "profile" },
+      {
+        path: "/playlist/:id",
+        element: <LazyComponent pageId="PlaylistPage" />,
+        id: "playlist",
+      },
+      {
+        path: "/profile",
+        element: <LazyComponent pageId="ProfilePage" />,
+        id: "profile",
+      },
     ],
   },
   {
     path: "/login",
-    element: <LoginPage />,
-    errorElement: <ErrorPage />,
+    element: <LazyComponent pageId="LoginPage" />,
+    errorElement: <LazyComponent pageId="ErrorPage" />,
   },
 ]);
 

@@ -15,7 +15,7 @@ import PlayController from "../miniPlayer/PlayController";
 import PlayerTimer from "../miniPlayer/PlayerTimer";
 
 const MusicMiniPlayer = () => {
-  const { musicInfo } = useMusicModel();
+  const { musicInfo } = useMusicModel((store) => [store.musicInfo]);
 
   return (
     <Toolbar

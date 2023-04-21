@@ -25,7 +25,9 @@ const LoginByQRCode = () => {
     confirmInfo: null as { nickname: string; avatar: string } | null,
   });
 
-  const { updateLoginStatus } = useUserModel();
+  const { updateLoginStatus } = useUserModel((store) => [
+    store.updateLoginStatus,
+  ]);
 
   const generateKey = useMemoizedFn(async () => {
     const { data } = await generateLoginKey();

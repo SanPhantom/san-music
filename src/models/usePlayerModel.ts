@@ -1,30 +1,30 @@
 import {
   useCreation,
-  useDebounceFn,
   useLatest,
   useMemoizedFn,
   useSetState,
   useThrottleFn,
 } from "ahooks";
-import { createStore } from "hox";
-import { checkSongPlay, getSongUrl } from "../services/music.service";
-import { useMusicModel } from "./useMusicModel";
+import { createGlobalStore } from "hox";
 import { isEmpty } from "ramda";
+import { getSongUrl } from "../services/music.service";
+import { useMusicModel } from "./useMusicModel";
 
-export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
-  const { setState: setMusicState } = useMusicModel();
+export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
+  const { setState: setMusicState } = useMusicModel((store) => [
+    store.setState,
+  ]);
+
+  const playerRef = useRef<HTMLAudioElement>(new Audio());
 
   const [state, setState] = useSetState({
     loading: false,
     currentTime: 0,
     duration: 0,
     isPlaying: false,
-    player: new Audio(),
   });
 
   const currentTimeRef = useLatest(state.currentTime);
-  const durationRef = useLatest(state.duration ?? 0);
-  const playerStatusRef = useLatest(state.isPlaying);
 
   const playMusic = useMemoizedFn(async (id: string) => {
     const { data } = await getSongUrl(id);
@@ -33,9 +33,9 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
       setMusicState({
         currentSongId: id,
       });
-      state.player.src = url;
-      state.player.load();
-      state.player.play();
+      playerRef.current.src = url;
+      playerRef.current.load();
+      playerRef.current.play();
     }
 
     return null;
@@ -44,7 +44,7 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
   const { run: updateCurrentTime } = useThrottleFn(
     () => {
       setState({
-        currentTime: state.player.currentTime * 1000,
+        currentTime: (playerRef.current?.currentTime ?? 0) * 1000,
       });
     },
     {
@@ -52,71 +52,78 @@ export const [usePlayerModel, PlayerStoreProvider] = createStore(() => {
     }
   );
 
+  const clearPlayer = useMemoizedFn(() => {
+    playerRef.current?.removeEventListener("timeupdate", () => {});
+    playerRef.current?.removeEventListener("playing", () => {});
+    playerRef.current?.removeEventListener("play", () => {});
+    playerRef.current?.removeEventListener("seeked", () => {});
+    playerRef.current?.removeEventListener("ended", () => {});
+    playerRef.current?.removeEventListener("pause", () => {});
+    playerRef.current?.removeEventListener("canplay", () => {});
+    playerRef.current?.removeEventListener("waiting", () => {});
+  });
+
+  playerRef.current?.addEventListener("playing", () => {
+    setState({
+      isPlaying: true,
+    });
+  });
+
+  playerRef.current.addEventListener("durationchange", () => {
+    setState({
+      duration: (playerRef.current?.duration ?? 0) * 1000,
+    });
+  });
+
+  playerRef.current?.addEventListener("canplay", () => {
+    setState({
+      loading: false,
+      isPlaying: true,
+    });
+  });
+
+  /** waiting */
+  playerRef.current?.addEventListener("waiting", () => {
+    setState({
+      loading: true,
+    });
+  });
+
+  /** pause */
+  playerRef.current?.addEventListener("pause", () => {
+    setState({
+      isPlaying: false,
+    });
+  });
+
+  playerRef.current?.addEventListener("seeking", () => {});
+
+  playerRef.current?.addEventListener("ended", () => {
+    setState({
+      isPlaying: false,
+    });
+  });
+
+  playerRef.current?.addEventListener("timeupdate", () => {
+    setState({
+      currentTime: (playerRef.current?.currentTime ?? 0) * 1000,
+    });
+  });
+
   useCreation(() => {
-    /** 正在播放中 */
-    state.player.addEventListener("playing", () => {
-      setState({
-        isPlaying: true,
-      });
-    });
-
-    state.player.addEventListener("loadeddata", () => {
-      setState({
-        duration: state.player.duration * 1000,
-      });
-    });
-
-    state.player.addEventListener("canplay", () => {
-      setState({
-        loading: false,
-        isPlaying: true,
-      });
-    });
-
-    /** waiting */
-    state.player.addEventListener("waiting", () => {
-      setState({
-        loading: true,
-      });
-    });
-
-    /** pause */
-    state.player.addEventListener("pause", () => {
-      setState({
-        isPlaying: false,
-      });
-    });
-
-    state.player.addEventListener("seeking", () => {});
-
-    state.player.addEventListener("ended", () => {
-      setState({
-        isPlaying: false,
-      });
-    });
-
-    state.player.addEventListener("timeupdate", () => {
-      updateCurrentTime();
-    });
-
     return () => {
-      state.player.removeEventListener("timeupdate", () => {});
-      state.player.removeEventListener("playing", () => {});
-      state.player.removeEventListener("play", () => {});
-      state.player.removeEventListener("seeked", () => {});
-      state.player.removeEventListener("ended", () => {});
-      state.player.removeEventListener("pause", () => {});
-      state.player.removeEventListener("canplay", () => {});
-      state.player.removeEventListener("waiting", () => {});
+      if (playerRef.current) {
+        clearPlayer();
+      }
     };
-  }, [state.player]);
+  }, []);
 
   return {
-    player: state.player,
+    player: playerRef.current,
     loading: state.loading,
     currentTime: currentTimeRef.current,
-    duration: durationRef.current,
-    isPlaying: playerStatusRef.current,
+    duration: state.duration,
+    isPlaying: state.isPlaying,
     playMusic,
   };
 });

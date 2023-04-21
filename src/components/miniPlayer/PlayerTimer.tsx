@@ -4,7 +4,10 @@ import { transTime } from "../../utils";
 import { Typography } from "@mui/material";
 
 const PlayerTimer = () => {
-  const { currentTime, duration } = usePlayerModel();
+  const { currentTime, duration } = usePlayerModel((store) => [
+    store.currentTime,
+    store.duration,
+  ]);
   return (
     <Typography variant="caption" color={"text.secondary"}>{`${transTime(
       currentTime

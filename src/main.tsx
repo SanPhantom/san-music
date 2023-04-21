@@ -5,7 +5,6 @@ import { RouterProvider } from "react-router-dom";
 import "./index.less";
 import routes from "./routes/router";
 import { HoxRoot } from "hox";
-import { PlayerStoreProvider } from "./models/usePlayerModel";
 
 const theme = createTheme({
   palette: {
@@ -31,9 +30,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
   <ThemeProvider theme={theme}>
     <HoxRoot>
-      <PlayerStoreProvider>
-        <RouterProvider router={routes} />
-      </PlayerStoreProvider>
+      <RouterProvider router={routes} />
     </HoxRoot>
   </ThemeProvider>
   // </React.StrictMode>

@@ -5,7 +5,7 @@ import { getUserDetail } from "../services/user.service";
 import { useUserModel } from "../models/useUserModel";
 
 const ProfilePage = () => {
-  const { user } = useUserModel();
+  const { user } = useUserModel((store) => [store.user]);
   const uidRef = useLatest(user.userInfo?.id);
 
   const {

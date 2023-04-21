@@ -24,7 +24,7 @@ const RecommendResource = () => {
   const containerWidth =
     containerRef.current?.getBoundingClientRect().width ?? 0;
 
-  const { user } = useUserModel();
+  const { user } = useUserModel((store) => [store.user]);
   const uid = useCreation(() => user.userInfo?.id, [user]);
 
   const playlists = useCreation(() => {

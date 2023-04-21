@@ -23,7 +23,7 @@ interface ILayoutProps {
 }
 
 const Layout = ({ children }: ILayoutProps) => {
-  const { currentSongId } = useMusicModel();
+  const { currentSongId } = useMusicModel((store) => [store.currentSongId]);
 
   return (
     <Stack sx={{ width: "100%", height: "100%" }}>

@@ -8,7 +8,7 @@ interface IUserInfoProps {}
 
 const UserInfo = () => {
   const navigate = useNavigate();
-  const { user } = useUserModel();
+  const { user } = useUserModel((store) => [store.user]);
   const { isLogin, isAnonymous, userInfo } = user;
   const noLogin = !isLogin || isAnonymous;
   return (

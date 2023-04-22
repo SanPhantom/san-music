@@ -1,6 +1,4 @@
-import { CalendarToday, ChevronRight } from "@mui/icons-material";
 import { Box, Paper, Stack, Typography } from "@mui/material";
-import React from "react";
 
 interface ISingleCardProps {
   label: string;

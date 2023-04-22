@@ -6,7 +6,6 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import React from "react";
 import EllipsisText from "./EllipsisText/EllipsisText";
 
 interface ICommonListItemProps {

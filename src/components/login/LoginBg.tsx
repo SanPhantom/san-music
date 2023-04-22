@@ -1,4 +1,3 @@
-import React from "react";
 import LoginBgImg from "../../assets/login-bg.png";
 
 const LoginBg = () => {

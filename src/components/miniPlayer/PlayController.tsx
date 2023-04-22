@@ -1,6 +1,5 @@
-import React from "react";
-import { usePlayerModel } from "../../models/usePlayerModel";
 import { IconButton, SvgIcon } from "@mui/material";
+import { usePlayerModel } from "../../models/usePlayerModel";
 
 import { ReactComponent as BoFangIcon } from "../../assets/icon/-bofang.svg";
 import { ReactComponent as ZanTingIcon } from "../../assets/icon/-zanting.svg";

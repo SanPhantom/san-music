@@ -1,15 +1,14 @@
-import { VisibilityOff, QrCode } from "@mui/icons-material";
+import { VisibilityOff } from "@mui/icons-material";
 import {
-  Stack,
+  Button,
   FormControl,
+  IconButton,
+  InputAdornment,
   InputLabel,
   OutlinedInput,
-  InputAdornment,
-  IconButton,
-  Button,
+  Stack,
   useTheme,
 } from "@mui/material";
-import React from "react";
 
 const LoginByEmail = () => {
   const theme = useTheme();

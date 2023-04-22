@@ -1,7 +1,6 @@
 import { ArrowDropDown } from "@mui/icons-material";
-import { alpha, Box, Menu, MenuItem, Stack, Typography } from "@mui/material";
+import { Menu, MenuItem, Stack, Typography } from "@mui/material";
 import { useCreation, useMemoizedFn, useSetState } from "ahooks";
-import React from "react";
 import { TypeEnum } from "../../types/utils";
 
 interface ITypeSelectProps {

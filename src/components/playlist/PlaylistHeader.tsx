@@ -1,9 +1,8 @@
-import { Share, Queue } from "@mui/icons-material";
-import { Stack, Box, Avatar, Chip, Typography } from "@mui/material";
-import React from "react";
+import { Queue, Share } from "@mui/icons-material";
+import { Avatar, Box, Chip, Stack, Typography } from "@mui/material";
+import { isEmpty } from "ramda";
 import { formatImageSize } from "../../utils";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
-import { isEmpty } from "ramda";
 
 interface IPlaylistHeaderProps {
   info: any;

@@ -1,10 +1,9 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
-import "./index.less";
 import routes from "./routes/router";
 import { HoxRoot } from "hox";
+import "./index.css";
 
 const theme = createTheme({
   palette: {

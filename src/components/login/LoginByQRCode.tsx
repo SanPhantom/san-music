@@ -1,6 +1,4 @@
 import { Avatar, Divider, Stack, Typography } from "@mui/material";
-import React from "react";
-import QRCodeCanvas from "qrcode.react";
 import {
   useCreation,
   useInterval,
@@ -8,14 +6,15 @@ import {
   useMemoizedFn,
   useSetState,
 } from "ahooks";
+import QRCodeCanvas from "qrcode.react";
+import { useNavigate } from "react-router-dom";
+import { setLocalItem } from "../../config/localforage.config";
+import { useUserModel } from "../../models/useUserModel";
 import {
   checkQRLoginStatus,
   generateLoginCode,
   generateLoginKey,
 } from "../../services/common.service";
-import { useUserModel } from "../../models/useUserModel";
-import { setLocalItem } from "../../config/localforage.config";
-import { useNavigate } from "react-router-dom";
 
 const LoginByQRCode = () => {
   const navigate = useNavigate();

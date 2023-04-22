@@ -1,8 +1,7 @@
 import { Box, Paper, Stack, Tab, Tabs } from "@mui/material";
 import { useCreation, useLatest, useRequest } from "ahooks";
-import React from "react";
-import { getUserDetail } from "../services/user.service";
 import { useUserModel } from "../models/useUserModel";
+import { getUserDetail } from "../services/user.service";
 
 const ProfilePage = () => {
   const { user } = useUserModel((store) => [store.user]);

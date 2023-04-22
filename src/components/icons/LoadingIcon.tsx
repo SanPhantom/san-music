@@ -1,5 +1,4 @@
 import { SvgIcon, SvgIconProps } from "@mui/material";
-import React from "react";
 import { ReactComponent as Loading } from "../../assets/loading.svg";
 
 const LoadingIcon = (

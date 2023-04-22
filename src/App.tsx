@@ -1,6 +1,6 @@
 import { CssBaseline } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import "./App.less";
+import "./App.css";
 import Layout from "./layouts/Layout";
 
 function App() {

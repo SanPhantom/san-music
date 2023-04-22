@@ -10,8 +10,8 @@ import {
   useSetState,
   useUpdateEffect,
 } from "ahooks";
-import React, { useRef } from "react";
-import "./banner.less";
+import { Fragment, useRef } from "react";
+import "./banner.css";
 
 interface IBannerProps {
   list: any[];
@@ -98,7 +98,7 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
   return (
     <div className="banner-root" id="banner-root" ref={bannerRootRef}>
       {list.length ? (
-        <React.Fragment>
+        <Fragment>
           <div
             className="banner-item-container"
             style={{
@@ -143,7 +143,7 @@ const Banner = ({ list, hideDot = false, renderItem }: IBannerProps) => {
               <ChevronRight color="primary" />
             </div>
           </div>
-        </React.Fragment>
+        </Fragment>
       ) : null}
     </div>
   );

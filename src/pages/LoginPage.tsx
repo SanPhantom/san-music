@@ -1,3 +1,4 @@
+import { EmailOutlined, QrCode } from "@mui/icons-material";
 import {
   alpha,
   Box,
@@ -7,14 +8,12 @@ import {
   Stack,
   useTheme,
 } from "@mui/material";
-import { EmailOutlined, QrCode } from "@mui/icons-material";
 
-import React from "react";
-import LoginTitle from "../components/login/LoginTitle";
-import LoginByEmail from "../components/login/LoginByEmail";
-import LoginBg from "../components/login/LoginBg";
 import { useSetState } from "ahooks";
+import LoginBg from "../components/login/LoginBg";
+import LoginByEmail from "../components/login/LoginByEmail";
 import LoginByQRCode from "../components/login/LoginByQRCode";
+import LoginTitle from "../components/login/LoginTitle";
 
 const LoginPage = () => {
   const theme = useTheme();

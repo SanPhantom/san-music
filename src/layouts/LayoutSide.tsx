@@ -1,18 +1,14 @@
 import {
-  alpha,
   CardContent,
   Divider,
   Drawer,
   Stack,
   Toolbar,
-  Link as MuiLink,
+  alpha,
 } from "@mui/material";
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useCreation } from "ahooks";
-import menus from "../config/menu.config";
-import UserPlaylist from "../components/UserPlaylist";
 import UserInfo from "../components/UserInfo";
+import menus from "../config/menu.config";
 
 interface ILayoutSideProps {}
 

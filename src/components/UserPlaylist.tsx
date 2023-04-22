@@ -1,10 +1,9 @@
+import { Stack } from "@mui/material";
 import { useAsyncEffect, useCreation, useSetState } from "ahooks";
-import React from "react";
+import { filter } from "ramda";
 import { useUserModel } from "../models/useUserModel";
 import { getUserPlaylist } from "../services/playlist.service";
-import { filter } from "ramda";
 import PlaylistView from "./playlist/PlaylistView";
-import { Box, Divider, Stack } from "@mui/material";
 
 interface IUserPlaylistProps {}
 

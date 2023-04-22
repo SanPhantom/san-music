@@ -1,6 +1,5 @@
-import React from "react";
-import { usePlayerModel } from "../../models/usePlayerModel";
 import { LinearProgress } from "@mui/material";
+import { usePlayerModel } from "../../models/usePlayerModel";
 
 const MusicLinearProgress = () => {
   const { currentTime, duration } = usePlayerModel((store) => [

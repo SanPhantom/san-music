@@ -1,5 +1,4 @@
-import { Stack, Box, Typography, TypographyProps } from "@mui/material";
-import React from "react";
+import { Box, Stack, Typography, TypographyProps } from "@mui/material";
 
 interface ITitleProps extends Omit<TypographyProps, "children"> {
   label: string;

@@ -1,7 +1,6 @@
-import React from "react";
+import { Typography } from "@mui/material";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { transTime } from "../../utils";
-import { Typography } from "@mui/material";
 
 const PlayerTimer = () => {
   const { currentTime, duration } = usePlayerModel((store) => [

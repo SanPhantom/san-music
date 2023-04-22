@@ -1,10 +1,7 @@
-import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
-import React from "react";
+import { ChevronRight } from "@mui/icons-material";
+import { Avatar, Box, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useUserModel } from "../models/useUserModel";
-import { ChevronRight } from "@mui/icons-material";
-
-interface IUserInfoProps {}
 
 const UserInfo = () => {
   const navigate = useNavigate();

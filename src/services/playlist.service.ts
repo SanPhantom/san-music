@@ -31,7 +31,6 @@ export const getPlaylistSongs = (
   page: number,
   pageSize: number
 ) => {
-  console.log({ id, page, pageSize });
   return musicAxios.get<any, any>("/playlist/track/all", {
     params: {
       id,

@@ -1,14 +1,12 @@
 import { MoreVert, VolumeUp } from "@mui/icons-material";
 import {
   Avatar,
-  Box,
   IconButton,
   ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
   Stack,
-  SvgIcon,
   Typography,
 } from "@mui/material";
 import { useCreation } from "ahooks";
@@ -17,7 +15,6 @@ import { useMusicModel } from "../../models/useMusicModel";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { formatArtists, formatImageSize } from "../../utils";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
-import LoadingIcon from "../icons/LoadingIcon";
 
 interface IMusicSongItemProps {
   song: any;

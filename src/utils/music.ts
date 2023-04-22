@@ -1,4 +1,3 @@
-import { usePlayerModel } from "../models/usePlayerModel";
 import { checkSongPlay, getSongUrl } from "../services/music.service";
 
 export const playMusic = async (id: string) => {

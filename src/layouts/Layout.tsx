@@ -54,7 +54,7 @@ const Layout = ({ children }: ILayoutProps) => {
             <Box component={"main"} sx={{ flex: 1, overflow: "auto", py: 2 }}>
               <Container>{children}</Container>
             </Box>
-            {currentSongId !== null && <MusicMiniPlayer />}
+            {currentSongId && <MusicMiniPlayer />}
           </Stack>
         </Stack>
       </Stack>

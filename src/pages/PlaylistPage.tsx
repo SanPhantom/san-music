@@ -9,10 +9,14 @@ import {
   getPlaylistDetail,
   getPlaylistSongs,
 } from "../services/playlist.service";
+import { useMusicModel } from "../models/useMusicModel";
 
 const PlaylistPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { musicListAction, setState: setMusicState } = useMusicModel(
+    (store) => [store.musicListAction, store.setState]
+  );
 
   const { data, run, loading } = useRequest(getPlaylistDetail, {
     manual: true,
@@ -24,10 +28,20 @@ const PlaylistPage = () => {
   } = useRequest(getPlaylistSongs, { manual: true });
   const playlistRef = useLatest(data?.playlist);
 
+  const updateMusicList = useMemoizedFn(() => {
+    const songs = songsRes.songs;
+    setMusicState({
+      currentPlaylistId: id,
+    });
+    musicListAction(
+      "update",
+      songs.map((song: any) => song.id)
+    );
+  });
+
   useCreation(async () => {
     if (playlistRef.current && id) {
       const trackCount = playlistRef.current?.trackCount ?? 0;
-      console.log({ trackCount });
       requestSongs(id, 0, trackCount);
     }
   }, [data]);
@@ -70,7 +84,7 @@ const PlaylistPage = () => {
                     showAction
                     song={item}
                     index={index + 1}
-                    onItemClick={() => {}}
+                    onItemClick={updateMusicList}
                   />
                 ))}
               </Stack>

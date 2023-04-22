@@ -1,8 +1,8 @@
-import { useAsyncEffect, useLatest, useSetState } from "ahooks";
+import { useAsyncEffect, useLatest, useMemoizedFn, useSetState } from "ahooks";
 import { createGlobalStore } from "hox";
-import { isEmpty } from "ramda";
 import { getSongDetail } from "../services/music.service";
 import { formatArtists, formatImageSize } from "../utils";
+import { shuffleList } from "../utils/tools";
 
 export enum MusicPlayType {
   SuiJi = 0,
@@ -18,10 +18,12 @@ type PlayMusicInfoType = {
 };
 
 export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
+  const currentMusicList = useRef<string[]>([]);
+
   const [state, setState] = useSetState({
-    songList: [],
-    currentSongId: null as string | null,
-    currentPlaylistId: null as string | null,
+    songList: [] as string[],
+    currentSongId: undefined as string | undefined,
+    currentPlaylistId: undefined as string | undefined,
     playType: 2 as 0 | 1 | 2,
     playInfo: null as PlayMusicInfoType | null,
   });
@@ -31,8 +33,38 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
   const playTypeRef = useLatest(state.playType);
   const musicInfoRef = useLatest(state.playInfo);
 
+  const handleMusicListAction = useMemoizedFn(
+    (action: "add" | "update" | "remove", ids: string | string[]) => {
+      switch (action) {
+        case "add":
+          const addList = [
+            ...state.songList,
+            ...(typeof ids === "object" ? ids : [ids]),
+          ];
+          setState({
+            songList: addList,
+          });
+          currentMusicList.current = shuffleList(addList);
+          break;
+        case "update":
+          const updateList = [...(typeof ids === "object" ? ids : [ids])];
+          setState({
+            songList: updateList,
+          });
+          currentMusicList.current = shuffleList(updateList);
+          break;
+        case "remove":
+          if (typeof ids === "string") {
+            let musicIndex = currentMusicList.current.indexOf(ids);
+            currentMusicList.current.splice(musicIndex, 1);
+          }
+          break;
+      }
+    }
+  );
+
   useAsyncEffect(async () => {
-    if (!isEmpty(state.currentSongId) && state.currentSongId !== null) {
+    if (state.currentSongId && state.currentSongId !== null) {
       const res = await getSongDetail(state.currentSongId);
       const songInfo = res.songs[0];
       setState({
@@ -52,5 +84,7 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
     playType: playTypeRef.current,
     musicInfo: musicInfoRef.current,
     setState,
+    musicListAction: handleMusicListAction,
+    currentList: currentMusicList.current,
   };
 });

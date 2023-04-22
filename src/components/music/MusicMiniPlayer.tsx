@@ -13,9 +13,11 @@ import EllipsisText from "../common/EllipsisText/EllipsisText";
 import MusicLinearProgress from "../miniPlayer/MusicLinearProgress";
 import PlayController from "../miniPlayer/PlayController";
 import PlayerTimer from "../miniPlayer/PlayerTimer";
+import { usePlayerModel } from "../../models/usePlayerModel";
 
 const MusicMiniPlayer = () => {
   const { musicInfo } = useMusicModel((store) => [store.musicInfo]);
+  const { nextMusic } = usePlayerModel((store) => [store.nextMusic]);
 
   return (
     <Toolbar
@@ -64,7 +66,7 @@ const MusicMiniPlayer = () => {
 
           <Stack direction={"row"} spacing={1.5} alignItems={"center"}>
             <PlayController />
-            <IconButton sx={{ m: 0, p: 0 }}>
+            <IconButton sx={{ m: 0, p: 0 }} onClick={nextMusic}>
               <SvgIcon
                 component={NextMusicIcon}
                 inheritViewBox

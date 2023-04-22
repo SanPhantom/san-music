@@ -1,22 +1,19 @@
+import { Email } from "@mui/icons-material";
 import {
-  alpha,
   AppBar,
   Box,
   Container,
   IconButton,
-  Link,
   Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
 import React from "react";
+import SearchInput from "../components/common/SearchInput";
 import MusicMiniPlayer from "../components/music/MusicMiniPlayer";
-import UserInfo from "../components/UserInfo";
+import { useMusicModel } from "../models/useMusicModel";
 import "./layout.less";
 import LayoutSide from "./LayoutSide";
-import { useMusicModel } from "../models/useMusicModel";
-import SearchInput from "../components/common/SearchInput";
-import { Email } from "@mui/icons-material";
 
 interface ILayoutProps {
   children?: React.ReactNode;
@@ -58,7 +55,7 @@ const Layout = ({ children }: ILayoutProps) => {
             <Box component={"main"} sx={{ flex: 1, overflow: "auto", py: 2 }}>
               <Container>{children}</Container>
             </Box>
-            {currentSongId !== null && <MusicMiniPlayer />}
+            {currentSongId && <MusicMiniPlayer />}
           </Stack>
         </Stack>
       </Stack>

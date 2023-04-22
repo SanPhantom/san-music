@@ -1,9 +1,9 @@
 import {
+  useBoolean,
   useCreation,
   useLatest,
   useMemoizedFn,
   useSetState,
-  useThrottleFn,
 } from "ahooks";
 import { createGlobalStore } from "hox";
 import { isEmpty } from "ramda";
@@ -11,17 +11,26 @@ import { getSongUrl } from "../services/music.service";
 import { useMusicModel } from "./useMusicModel";
 
 export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
-  const { setState: setMusicState } = useMusicModel((store) => [
+  const {
+    setState: setMusicState,
+    currentList,
+    currentSongId,
+  } = useMusicModel((store) => [
     store.setState,
+    store.currentList,
+    store.currentSongId,
   ]);
 
   const playerRef = useRef<HTMLAudioElement>(new Audio());
 
+  const [isPlaying, { setTrue: startPlaying, setFalse: stopPlaying }] =
+    useBoolean(false);
+  const [loading, { setTrue: startLoading, setFalse: closeLoading }] =
+    useBoolean(false);
+
   const [state, setState] = useSetState({
-    loading: false,
     currentTime: 0,
     duration: 0,
-    isPlaying: false,
   });
 
   const currentTimeRef = useLatest(state.currentTime);
@@ -41,16 +50,27 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     return null;
   });
 
-  const { run: updateCurrentTime } = useThrottleFn(
-    () => {
-      setState({
-        currentTime: (playerRef.current?.currentTime ?? 0) * 1000,
-      });
-    },
-    {
-      wait: 1000,
+  const nextMusic = useMemoizedFn(() => {
+    if (currentList && currentSongId) {
+      let musicIndex = currentList.indexOf(currentSongId);
+      musicIndex = musicIndex + 1;
+      if (musicIndex === currentList.length) {
+        musicIndex = 0;
+      }
+      playMusic(currentList[musicIndex]);
     }
-  );
+  });
+
+  const prevMusic = useMemoizedFn(() => {
+    if (currentList && currentSongId) {
+      let musicIndex = currentList.indexOf(currentSongId);
+      musicIndex = musicIndex - 1;
+      if (musicIndex === -1) {
+        musicIndex = currentList.length - 1;
+      }
+      playMusic(currentList[musicIndex]);
+    }
+  });
 
   const clearPlayer = useMemoizedFn(() => {
     playerRef.current?.removeEventListener("timeupdate", () => {});
@@ -63,54 +83,45 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playerRef.current?.removeEventListener("waiting", () => {});
   });
 
-  playerRef.current?.addEventListener("playing", () => {
-    setState({
-      isPlaying: true,
-    });
-  });
-
-  playerRef.current.addEventListener("durationchange", () => {
-    setState({
-      duration: (playerRef.current?.duration ?? 0) * 1000,
-    });
-  });
-
-  playerRef.current?.addEventListener("canplay", () => {
-    setState({
-      loading: false,
-      isPlaying: true,
-    });
-  });
-
-  /** waiting */
-  playerRef.current?.addEventListener("waiting", () => {
-    setState({
-      loading: true,
-    });
-  });
-
-  /** pause */
-  playerRef.current?.addEventListener("pause", () => {
-    setState({
-      isPlaying: false,
-    });
-  });
-
-  playerRef.current?.addEventListener("seeking", () => {});
-
-  playerRef.current?.addEventListener("ended", () => {
-    setState({
-      isPlaying: false,
-    });
-  });
-
-  playerRef.current?.addEventListener("timeupdate", () => {
-    setState({
-      currentTime: (playerRef.current?.currentTime ?? 0) * 1000,
-    });
-  });
-
   useCreation(() => {
+    playerRef.current?.addEventListener("playing", () => {
+      startPlaying();
+    });
+
+    playerRef.current.addEventListener("durationchange", () => {
+      setState({
+        duration: (playerRef.current?.duration ?? 0) * 1000,
+      });
+    });
+
+    playerRef.current?.addEventListener("canplay", () => {
+      startPlaying();
+      closeLoading();
+    });
+
+    /** waiting */
+    playerRef.current?.addEventListener("waiting", () => {
+      startLoading();
+    });
+
+    /** pause */
+    playerRef.current?.addEventListener("pause", () => {
+      stopPlaying();
+    });
+
+    playerRef.current?.addEventListener("seeking", () => {});
+
+    playerRef.current?.addEventListener("ended", () => {
+      stopPlaying();
+      nextMusic();
+    });
+
+    playerRef.current?.addEventListener("timeupdate", () => {
+      setState({
+        currentTime: (playerRef.current?.currentTime ?? 0) * 1000,
+      });
+    });
+
     return () => {
       if (playerRef.current) {
         clearPlayer();
@@ -120,10 +131,12 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
 
   return {
     player: playerRef.current,
-    loading: state.loading,
+    loading,
     currentTime: currentTimeRef.current,
     duration: state.duration,
-    isPlaying: state.isPlaying,
+    isPlaying,
     playMusic,
+    nextMusic,
+    prevMusic,
   };
 });

@@ -46,7 +46,7 @@ export const logout = () => {
 };
 
 export const getUserDetail = (userId: string) => {
-  return musicAxios.get("/user/detail", {
+  return musicAxios.get<any, any>("/user/detail", {
     params: {
       uid: userId,
     },
@@ -54,7 +54,7 @@ export const getUserDetail = (userId: string) => {
 };
 
 export const getUserVipInfo = () => {
-  return musicAxios.get("/vip/info");
+  return musicAxios.get<any, any>("/vip/info");
 };
 
 export const getUserPlaylist = (userId: string, offset: number = 0) => {

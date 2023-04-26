@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import svgr from "vite-plugin-svgr";
 import path from "path";
@@ -7,7 +7,8 @@ import AutoImport from "unplugin-auto-import/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/",
+  base: "./",
+  mode: "production",
   esbuild: {
     jsxInject: `import React from 'react'`,
   },
@@ -32,6 +33,7 @@ export default defineConfig({
       imports: ["react", "react-router-dom"],
       dts: "src/auto-import.d.ts", // 生成 `auto-import.d.ts` 全局声明
     }),
+    splitVendorChunkPlugin(),
   ],
   optimizeDeps: {
     include: [],
@@ -47,5 +49,8 @@ export default defineConfig({
         javascriptEnabled: true,
       },
     },
+  },
+  build: {
+    ssrManifest: true,
   },
 });

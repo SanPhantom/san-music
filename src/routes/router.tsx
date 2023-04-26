@@ -1,10 +1,5 @@
-import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../App";
-import ErrorPage from "../pages/ErrorPage";
-import FindMusicPage from "../pages/FindMusicPage";
-import LoginPage from "../pages/LoginPage";
-import PlaylistPage from "../pages/PlaylistPage";
-import ProfilePage from "../pages/ProfilePage";
 import LazyComponent from "./LazyComponent";
 
 const routes = createBrowserRouter([

@@ -6,7 +6,7 @@
     },
     {
       "source": "/playlist/:path((?!uk/).*)",
-      "destination": "/"
+      "destination": "/playlist"
     }
   ]
 }

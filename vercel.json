@@ -1,12 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/:path((?!uk/).*)",
+      "source": "/playlist/:path((?!uk/).*)",
       "destination": "/"
     },
     {
-      "source": "/playlist/:path((?!uk/).*)",
-      "destination": "/playlist"
+      "source": "/:path((?!uk/).*)",
+      "destination": "/"
     }
   ]
 }

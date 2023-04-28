@@ -30,7 +30,11 @@ const Layout = ({ children }: ILayoutProps) => {
         }}
       >
         <Toolbar
-          sx={{ gap: 1.5, justifyContent: "space-between" }}
+          sx={{
+            gap: 1.5,
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
           data-tauri-drag-region="self"
         >
           <Typography
@@ -43,9 +47,16 @@ const Layout = ({ children }: ILayoutProps) => {
           >
             San Music
           </Typography>
-          <Stack sx={{ flexDirection: "row" }}>
+          <Stack
+            sx={{
+              flexDirection: "row",
+              gap: 1.5,
+              alignItems: "center",
+              justifyContent: "flex-start",
+            }}
+          >
             <SearchInput />
-            <IconButton color="inherit">
+            <IconButton color="inherit" size="small">
               <Email color="inherit" />
             </IconButton>
           </Stack>

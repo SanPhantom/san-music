@@ -29,21 +29,26 @@ const Layout = ({ children }: ILayoutProps) => {
           zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
       >
-        <Toolbar sx={{ gap: 1.5 }}>
+        <Toolbar
+          sx={{ gap: 1.5, justifyContent: "space-between" }}
+          data-tauri-drag-region="self"
+        >
           <Typography
             variant="h6"
             noWrap
             component="div"
             fontWeight={600}
             fontSize={24}
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            sx={{ display: { xs: "none", sm: "block" } }}
           >
             San Music
           </Typography>
-          <SearchInput />
-          <IconButton color="inherit">
-            <Email color="inherit" />
-          </IconButton>
+          <Stack sx={{ flexDirection: "row" }}>
+            <SearchInput />
+            <IconButton color="inherit">
+              <Email color="inherit" />
+            </IconButton>
+          </Stack>
         </Toolbar>
       </AppBar>
       <Stack sx={{ flexGrow: 1, height: "100%" }}>

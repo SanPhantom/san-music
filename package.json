@@ -29,6 +29,7 @@
     "vite-plugin-svgr": "^2.4.0"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^1.2.3",
     "@types/howler": "^2.2.7",
     "@types/node": "^18.14.4",
     "@types/numeral": "^2.0.2",

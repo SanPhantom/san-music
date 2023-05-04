@@ -4,6 +4,7 @@ import {
   useLatest,
   useMemoizedFn,
   useSetState,
+  useUnmount,
 } from "ahooks";
 import { createGlobalStore } from "hox";
 import { isEmpty } from "ramda";
@@ -128,6 +129,10 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
       }
     };
   }, []);
+
+  useUnmount(() => {
+    playerRef.current;
+  });
 
   return {
     player: playerRef.current,

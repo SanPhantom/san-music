@@ -1,7 +1,8 @@
 import { useMemoizedFn, useMount, useSetState } from "ahooks";
 import { createGlobalStore } from "hox";
-import { setLocalItem } from "../config/localforage.config";
+import { getLocalItem, setLocalItem } from "../config/localforage.config";
 import { loginStatus, loginByVisitor } from "../services/user.service";
+import { readCookieKey } from "../utils/cookie";
 
 type UserStateType = {
   isLogin: boolean;
@@ -23,6 +24,10 @@ export const [useUserModel, getUserModel] = createGlobalStore(() => {
   });
 
   const updateLoginStatus = useMemoizedFn(async () => {
+    // const cookie = await getLocalItem("m_cookie");
+    // const expires = readCookieKey(cookie, "Expires");
+    // const music_u = readCookieKey(cookie, "MUSIC_U");
+    // console.log({ expires, music_u });
     const { data } = await loginStatus();
     if (!data.account.anonimousUser && !data.profile) {
       const anonymousUser = await loginByVisitor();

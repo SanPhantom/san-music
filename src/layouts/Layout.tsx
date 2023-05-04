@@ -1,18 +1,9 @@
-import { Email } from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  Container,
-  IconButton,
-  Stack,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import SearchInput from "../components/common/SearchInput";
+import { AppBar, Box, Container, Stack, Toolbar } from "@mui/material";
 import MusicMiniPlayer from "../components/music/MusicMiniPlayer";
 import { useMusicModel } from "../models/useMusicModel";
-import "./layout.less";
+import LayoutHead from "./LayoutHead";
 import LayoutSide from "./LayoutSide";
+import "./layout.less";
 
 interface ILayoutProps {
   children?: React.ReactNode;
@@ -29,22 +20,7 @@ const Layout = ({ children }: ILayoutProps) => {
           zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
       >
-        <Toolbar sx={{ gap: 1.5 }}>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            fontWeight={600}
-            fontSize={24}
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
-            San Music
-          </Typography>
-          <SearchInput />
-          <IconButton color="inherit">
-            <Email color="inherit" />
-          </IconButton>
-        </Toolbar>
+        <LayoutHead />
       </AppBar>
       <Stack sx={{ flexGrow: 1, height: "100%" }}>
         <Toolbar />

@@ -1,26 +1,29 @@
 import axios from "axios";
 import { getLocalItem } from "./localforage.config";
+import { readCookieKey } from "../utils/cookie";
 
 const request = axios.create({
   baseURL: "https://musicapi.onephantom.cn/",
-  // baseURL: 'http://localhost:3000/',
   timeout: 100000,
   withCredentials: true,
-  headers: {
-    // "X-Custom-Header": 'foobar',
-  },
+  headers: {},
 });
 
 request.interceptors.request.use(async (config) => {
   const { method } = config;
   const cookie = await getLocalItem("m_cookie");
-  // cookie.os = "pc";
   switch (method && method.toUpperCase()) {
     case "GET":
+      config.data = true;
       config.params = {
         ...config.params,
-        cookie: encodeURIComponent(cookie),
+        cookie: encodeURIComponent(
+          `MUSIC_U=${
+            readCookieKey(cookie, "MUSIC_U") ?? readCookieKey(cookie, "MUSIC_A")
+          };`
+        ),
       };
+
       break;
     case "POST":
       config.params = {

@@ -4,3 +4,7 @@
   pointer-events: none;
   object-fit: cover;
 }
+
+.blur-img-root {
+  backdrop-filter: blur(6px);
+}

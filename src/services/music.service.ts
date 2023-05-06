@@ -24,3 +24,12 @@ export const getSongDetail = (ids: string) => {
     },
   });
 };
+
+export const getSongLyric = (id: string) => {
+  return musicAxios.get<any, any>("/lyric", {
+    params: {
+      id,
+      noCookie: false,
+    },
+  });
+};

@@ -1,4 +1,4 @@
-import { Queue, Share } from "@mui/icons-material";
+import { Comment, Queue, Share } from "@mui/icons-material";
 import { Avatar, Box, Chip, Stack, Typography } from "@mui/material";
 import { isEmpty } from "ramda";
 import { formatImageSize } from "../../utils";
@@ -76,6 +76,15 @@ const PlaylistHeader = ({ info }: IPlaylistHeaderProps) => {
               label={
                 <Typography variant="body1" fontWeight={600}>
                   {info?.subscribedCount}
+                </Typography>
+              }
+              sx={{ px: 1 }}
+            />
+            <Chip
+              icon={<Comment fontSize={"small"} />}
+              label={
+                <Typography variant="body1" fontWeight={600}>
+                  {info?.commentCount}
                 </Typography>
               }
               sx={{ px: 1 }}

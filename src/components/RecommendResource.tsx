@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { Avatar, Box, IconButton, Stack } from "@mui/material";
+import { Avatar, Box, Chip, IconButton, Stack, alpha } from "@mui/material";
 import { useCreation, useMemoizedFn, useRequest } from "ahooks";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -106,15 +106,33 @@ const RecommendResource = () => {
                 sx={{ width: 180, cursor: "pointer" }}
                 onClick={() => navigate(`/playlist/${item.id}`)}
               >
-                <Avatar
-                  src={formatImageSize(item.picUrl, 220)}
-                  variant="rounded"
-                  sx={{
-                    width: 180,
-                    height: 180,
-                    boxShadow: (theme) => theme.shadows[1],
-                  }}
-                ></Avatar>
+                <Box sx={{ position: "relative" }}>
+                  {item.copywriter && (
+                    <Chip
+                      size="small"
+                      color="primary"
+                      label={item.copywriter}
+                      sx={{
+                        position: "absolute",
+                        left: 8,
+                        top: 8,
+                        zIndex: (theme) => theme.zIndex.appBar + 1,
+                        background: (theme) =>
+                          alpha(theme.palette.primary.main, 0.8),
+                      }}
+                    />
+                  )}
+                  <Avatar
+                    src={formatImageSize(item.picUrl, 220)}
+                    variant="rounded"
+                    sx={{
+                      width: 180,
+                      height: 180,
+                      boxShadow: (theme) => theme.shadows[1],
+                    }}
+                  ></Avatar>
+                </Box>
+
                 <EllipsisText line={2} variant={"body1"}>
                   {item.name}
                 </EllipsisText>

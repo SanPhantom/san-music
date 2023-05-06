@@ -14,10 +14,17 @@ import MusicLinearProgress from "../miniPlayer/MusicLinearProgress";
 import PlayController from "../miniPlayer/PlayController";
 import PlayerTimer from "../miniPlayer/PlayerTimer";
 import { usePlayerModel } from "../../models/usePlayerModel";
+import PlayerFullScreen from "../miniPlayer/PlayerFullScreen";
+import { useBoolean } from "ahooks";
 
 const MusicMiniPlayer = () => {
   const { musicInfo } = useMusicModel((store) => [store.musicInfo]);
   const { nextMusic } = usePlayerModel((store) => [store.nextMusic]);
+
+  const [
+    isFullScreen,
+    { setTrue: expansionFullScreen, setFalse: closeFullScreen },
+  ] = useBoolean(false);
 
   return (
     <Toolbar
@@ -38,7 +45,11 @@ const MusicMiniPlayer = () => {
           spacing={4}
         >
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
-            <Avatar src={musicInfo?.pic} variant="rounded">
+            <Avatar
+              src={musicInfo?.pic}
+              variant="rounded"
+              onClick={expansionFullScreen}
+            >
               <CircularProgress size={16} />
             </Avatar>
             <Stack>
@@ -76,6 +87,7 @@ const MusicMiniPlayer = () => {
           </Stack>
         </Stack>
       </Stack>
+      <PlayerFullScreen open={isFullScreen} onClose={closeFullScreen} />
     </Toolbar>
   );
 };

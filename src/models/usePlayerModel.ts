@@ -29,6 +29,7 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     const url = data[0].url;
     if (!playerRef.current) {
       playerRef.current = new Audio();
+      playerRef.current.crossOrigin = "anonymous";
     }
     if (!isEmpty(url) && playerRef.current) {
       setMusicState({
@@ -77,6 +78,10 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
   });
 
   useCreation(() => {
+    if (playerRef.current) {
+      playerRef.current.crossOrigin = "anonymous";
+    }
+
     playerRef.current?.addEventListener("playing", () => {
       startPlaying();
     });

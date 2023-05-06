@@ -1,11 +1,10 @@
 import { LinearProgress } from "@mui/material";
 import { usePlayerModel } from "../../models/usePlayerModel";
+import { useMusicModel } from "../../models/useMusicModel";
 
 const MusicLinearProgress = () => {
-  const { currentTime, duration } = usePlayerModel((store) => [
-    store.currentTime,
-    store.duration,
-  ]);
+  const { currentTime } = usePlayerModel((store) => [store.currentTime]);
+  const { duration } = useMusicModel((store) => [store.duration]);
   return (
     <LinearProgress
       variant="determinate"

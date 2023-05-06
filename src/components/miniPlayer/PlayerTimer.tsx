@@ -1,12 +1,11 @@
 import { Typography } from "@mui/material";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { transTime } from "../../utils";
+import { useMusicModel } from "../../models/useMusicModel";
 
 const PlayerTimer = () => {
-  const { currentTime, duration } = usePlayerModel((store) => [
-    store.currentTime,
-    store.duration,
-  ]);
+  const { currentTime } = usePlayerModel((store) => [store.currentTime]);
+  const { duration } = useMusicModel((store) => [store.duration]);
   return (
     <Typography variant="caption" color={"text.secondary"}>{`${transTime(
       currentTime

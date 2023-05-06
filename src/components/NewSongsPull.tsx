@@ -31,7 +31,7 @@ const NewSongsPull = () => {
             }}
           >
             {(data?.result ?? []).slice(0, 5).map((item: any) => (
-              <MusicSongItem song={item.song} />
+              <MusicSongItem key={item.id} song={item.song} />
             ))}
           </Stack>
           <Stack
@@ -46,7 +46,7 @@ const NewSongsPull = () => {
             }}
           >
             {(data?.result ?? []).slice(5, 10).map((item: any) => (
-              <MusicSongItem song={item.song} />
+              <MusicSongItem key={item.id} song={item.song} />
             ))}
           </Stack>
         </Stack>

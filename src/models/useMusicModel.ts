@@ -26,6 +26,7 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
     currentPlaylistId: undefined as string | undefined,
     playType: 2 as 0 | 1 | 2,
     playInfo: null as PlayMusicInfoType | null,
+    duration: 0,
   });
 
   const currentSongRef = useLatest(state.currentSongId);
@@ -74,6 +75,7 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
           name: songInfo.name,
           pic: formatImageSize(songInfo.al.picUrl, 128),
         },
+        duration: songInfo.dt,
       });
     }
   }, [state.currentSongId]);
@@ -83,8 +85,9 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
     currentPlaylistId: currentPlaylistRef.current,
     playType: playTypeRef.current,
     musicInfo: musicInfoRef.current,
+    currentList: currentMusicList.current,
+    duration: state.duration,
     setState,
     musicListAction: handleMusicListAction,
-    currentList: currentMusicList.current,
   };
 });

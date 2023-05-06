@@ -1,11 +1,4 @@
-import {
-  useBoolean,
-  useCreation,
-  useLatest,
-  useMemoizedFn,
-  useSetState,
-  useUnmount,
-} from "ahooks";
+import { useBoolean, useCreation, useMemoizedFn } from "ahooks";
 import { createGlobalStore } from "hox";
 import { isEmpty } from "ramda";
 import { getSongUrl } from "../services/music.service";
@@ -22,24 +15,22 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     store.currentSongId,
   ]);
 
-  const playerRef = useRef<HTMLAudioElement>(new Audio());
+  const playerRef = useRef<HTMLAudioElement | null>(new Audio());
 
   const [isPlaying, { setTrue: startPlaying, setFalse: stopPlaying }] =
     useBoolean(false);
   const [loading, { setTrue: startLoading, setFalse: closeLoading }] =
     useBoolean(false);
 
-  const [state, setState] = useSetState({
-    currentTime: 0,
-    duration: 0,
-  });
-
-  const currentTimeRef = useLatest(state.currentTime);
+  const [currentTime, setCurrentTime] = useState(0);
 
   const playMusic = useMemoizedFn(async (id: string) => {
     const { data } = await getSongUrl(id);
     const url = data[0].url;
-    if (!isEmpty(url)) {
+    if (!playerRef.current) {
+      playerRef.current = new Audio();
+    }
+    if (!isEmpty(url) && playerRef.current) {
       setMusicState({
         currentSongId: id,
       });
@@ -82,17 +73,12 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playerRef.current?.removeEventListener("pause", () => {});
     playerRef.current?.removeEventListener("canplay", () => {});
     playerRef.current?.removeEventListener("waiting", () => {});
+    playerRef.current = null;
   });
 
   useCreation(() => {
     playerRef.current?.addEventListener("playing", () => {
       startPlaying();
-    });
-
-    playerRef.current.addEventListener("durationchange", () => {
-      setState({
-        duration: (playerRef.current?.duration ?? 0) * 1000,
-      });
     });
 
     playerRef.current?.addEventListener("canplay", () => {
@@ -118,9 +104,7 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     });
 
     playerRef.current?.addEventListener("timeupdate", () => {
-      setState({
-        currentTime: (playerRef.current?.currentTime ?? 0) * 1000,
-      });
+      setCurrentTime((playerRef.current?.currentTime ?? 0) * 1000);
     });
 
     return () => {
@@ -128,17 +112,12 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
         clearPlayer();
       }
     };
-  }, []);
-
-  useUnmount(() => {
-    playerRef.current;
-  });
+  }, [playerRef.current]);
 
   return {
     player: playerRef.current,
     loading,
-    currentTime: currentTimeRef.current,
-    duration: state.duration,
+    currentTime,
     isPlaying,
     playMusic,
     nextMusic,

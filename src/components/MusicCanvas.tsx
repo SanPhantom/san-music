@@ -1,57 +1,86 @@
-import { Box } from "@mui/material";
-import React from "react";
+import { Box, useTheme } from "@mui/material";
+import {
+  useCreation,
+  useMemoizedFn,
+  useMount,
+  useSize,
+  useUnmount,
+} from "ahooks";
 import { usePlayerModel } from "../models/usePlayerModel";
-import { useCreation, useMemoizedFn, useSize } from "ahooks";
 
 interface IMusicCanvasProps {}
 
+// const lineWidth = 4;
+
 const MusicCanvas = () => {
-  const { player } = usePlayerModel((state) => [state.player]);
+  const theme = useTheme();
+  const { audioCtx, audioSource, analyser } = usePlayerModel((state) => [
+    state.player,
+    state.audioCtx,
+    state.audioSource,
+    state.analyser,
+  ]);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const size = useSize(containerRef);
 
-  if (!player) return null;
-
   const handleDrawCanvas = useMemoizedFn((dataArray) => {
     // draw canvas
-    const canvasCtx = canvasRef.current?.getContext("2d");
-    canvasCtx?.clearRect(0, 0, size?.width ?? 0, size?.height ?? 0);
+    if (canvasRef.current) {
+      const canvasCtx = canvasRef.current.getContext("2d");
+      if (canvasCtx) {
+        canvasCtx.clearRect(0, 0, size?.width ?? 0, size?.height ?? 0);
+        canvasCtx?.beginPath();
+        let grd = canvasCtx.createLinearGradient(0, 0, 600, 0);
+        grd.addColorStop(0, "#fff");
+        grd.addColorStop(1, theme.palette.primary.main);
+        const lineWidth = (size?.width ?? 0) / dataArray.length;
+        for (let i = 0; i < dataArray.length; i++) {
+          const value = dataArray[i * 2];
+
+          canvasCtx.fillStyle = grd;
+          canvasCtx.fillRect(i * 2, size?.height ?? 0, lineWidth, -value + 1);
+          canvasCtx.fillRect(
+            i * 2,
+            (size?.height ?? 0) - 20 - value,
+            lineWidth,
+            0
+          );
+        }
+      }
+    }
   });
 
   const initAudio = useMemoizedFn(() => {
-    const audioCtx = new AudioContext();
+    if (analyser && audioSource && audioCtx) {
+      const bufferLength = analyser.fftSize;
 
-    const analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 2048;
+      const dataArray = new Uint8Array(bufferLength);
 
-    const source = audioCtx.createMediaElementSource(player);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
-
-    const bufferLength = analyser.fftSize;
-
-    const dataArray = new Uint8Array(bufferLength);
-
-    const renderFrame = () => {
-      requestAnimationFrame(renderFrame);
-      console.log(dataArray);
-      analyser.getByteFrequencyData(dataArray);
-      handleDrawCanvas(dataArray);
-    };
-    renderFrame();
+      const renderFrame = () => {
+        requestAnimationFrame(renderFrame);
+        // console.log(dataArray);
+        analyser.getByteFrequencyData(dataArray);
+        handleDrawCanvas(dataArray);
+      };
+      renderFrame();
+    }
   });
 
-  useCreation(() => {
-    if (size?.width && size?.height) {
+  useEffect(() => {
+    if (size?.width && size?.height && analyser && audioSource) {
       initAudio();
     }
-  }, [size]);
+  }, [size, analyser, audioSource]);
 
   return (
     <Box ref={containerRef} sx={{ width: "100%", height: "100%" }}>
-      <canvas ref={canvasRef} />
+      <canvas
+        ref={canvasRef}
+        width={size?.width ?? 0}
+        height={size?.height ?? 0}
+      />
     </Box>
   );
 };

@@ -15,7 +15,13 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     store.currentSongId,
   ]);
 
-  const playerRef = useRef<HTMLAudioElement | null>(new Audio());
+  const playerRef = useRef<HTMLAudioElement>(new Audio());
+
+  const [audioCtx, setAudioCtx] = useState<AudioContext | null>(null);
+
+  const [audioSource, setAudioSource] =
+    useState<MediaElementAudioSourceNode | null>(null);
+  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
 
   const [isPlaying, { setTrue: startPlaying, setFalse: stopPlaying }] =
     useBoolean(false);
@@ -27,10 +33,7 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
   const playMusic = useMemoizedFn(async (id: string) => {
     const { data } = await getSongUrl(id);
     const url = data[0].url;
-    if (!playerRef.current) {
-      playerRef.current = new Audio();
-      playerRef.current.crossOrigin = "anonymous";
-    }
+
     if (!isEmpty(url) && playerRef.current) {
       setMusicState({
         currentSongId: id,
@@ -74,16 +77,36 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playerRef.current?.removeEventListener("pause", () => {});
     playerRef.current?.removeEventListener("canplay", () => {});
     playerRef.current?.removeEventListener("waiting", () => {});
-    playerRef.current = null;
   });
 
   useCreation(() => {
-    if (playerRef.current) {
-      playerRef.current.crossOrigin = "anonymous";
+    if (audioCtx) {
+      const baseAnalyser = new AnalyserNode(audioCtx);
+      baseAnalyser.fftSize = 2048;
+      setAnalyser(baseAnalyser);
+      setAudioSource(
+        new MediaElementAudioSourceNode(audioCtx, {
+          mediaElement: playerRef.current,
+        })
+      );
     }
+  }, [audioCtx]);
+
+  useCreation(() => {
+    if (audioSource && analyser && audioCtx) {
+      audioSource?.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+  }, [analyser, audioSource, audioCtx]);
+
+  useCreation(() => {
+    playerRef.current.crossOrigin = "anonymous";
 
     playerRef.current?.addEventListener("playing", () => {
       startPlaying();
+      if (!audioCtx) {
+        setAudioCtx(new AudioContext());
+      }
     });
 
     playerRef.current?.addEventListener("canplay", () => {
@@ -113,11 +136,9 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     });
 
     return () => {
-      if (playerRef.current) {
-        clearPlayer();
-      }
+      clearPlayer();
     };
-  }, [playerRef.current]);
+  }, []);
 
   return {
     player: playerRef.current,
@@ -127,5 +148,8 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playMusic,
     nextMusic,
     prevMusic,
+    audioCtx,
+    audioSource,
+    analyser,
   };
 });

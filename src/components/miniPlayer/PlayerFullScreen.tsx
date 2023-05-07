@@ -31,7 +31,7 @@ const PlayerFullScreen = (props: DialogProps) => {
   const { musicInfo } = useMusicModel((state) => [state.musicInfo]);
   return (
     <Dialog fullScreen TransitionComponent={SlideTransition} {...props}>
-      <Stack sx={{ height: "100%", position: "relative" }}>
+      <Box sx={{ height: "100%", position: "relative" }}>
         <BlurImage
           src={musicInfo?.targetPic}
           style={{
@@ -45,14 +45,34 @@ const PlayerFullScreen = (props: DialogProps) => {
         <Stack
           sx={{ height: "100%", position: "relative", color: "common.white" }}
         >
-          <Toolbar>
+          <Toolbar sx={{ position: "relative" }}>
             <IconButton
               onClick={(e) => props?.onClose?.(e, "backdropClick")}
               color="inherit"
+              sx={{ position: "relative", zIndex: 1 }}
             >
               <KeyboardArrowDown fontSize="large" color="inherit" />
             </IconButton>
-            <Typography>Component Header</Typography>
+            <Stack
+              sx={{
+                width: "100%",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "absolute",
+                left: 0,
+                top: 0,
+                px: 12,
+                gap: 0.5,
+              }}
+            >
+              <Typography variant="body1" fontWeight={600}>
+                {musicInfo?.name}
+              </Typography>
+              <Typography color={"grey"} variant="body2">
+                {musicInfo?.art}
+              </Typography>
+            </Stack>
           </Toolbar>
           <Divider
             sx={{
@@ -81,7 +101,7 @@ const PlayerFullScreen = (props: DialogProps) => {
           />
           <Stack sx={{ height: 120 }}></Stack>
         </Stack>
-      </Stack>
+      </Box>
     </Dialog>
   );
 };

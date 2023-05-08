@@ -12,11 +12,12 @@ const MusicRecord = () => {
   const size = useSize(containerRef);
 
   const picSize = useCreation(() => {
+    const rate = 0.6;
     if (size?.height && size.width) {
       if (size.height > size.width) {
-        return size.width / 2;
+        return size.width * rate;
       }
-      return size.height / 2;
+      return size.height * rate;
     }
     return 0;
   }, [size]);

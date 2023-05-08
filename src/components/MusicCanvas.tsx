@@ -32,7 +32,12 @@ const MusicCanvas = () => {
       if (canvasCtx) {
         canvasCtx.clearRect(0, 0, size?.width ?? 0, size?.height ?? 0);
         canvasCtx?.beginPath();
-        let grd = canvasCtx.createLinearGradient(0, 0, 0, 160);
+        let grd = canvasCtx.createLinearGradient(
+          0,
+          (size?.height ?? 0) / 2,
+          0,
+          (size?.height ?? 0) * 2
+        );
         grd.addColorStop(0, theme.palette.primary.main);
         grd.addColorStop(1, "#fff");
 
@@ -41,7 +46,7 @@ const MusicCanvas = () => {
         for (let i = 0; i < dataArray.length; i++) {
           const value = dataArray[i];
 
-          canvasCtx.fillStyle = theme.palette.primary.main;
+          canvasCtx.fillStyle = grd;
           canvasCtx.fillRect(
             i * lineWidth,
             size?.height ?? 0,

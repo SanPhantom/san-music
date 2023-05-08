@@ -17,6 +17,8 @@ import MusicLyric from "../music/MusicLyric";
 import { useMusicModel } from "../../models/useMusicModel";
 import BlurImage from "../common/Image/BlurImage";
 import MusicCanvas from "../MusicCanvas";
+import MusicRecord from "../music/MusicRecord";
+import MusicControl from "../music/MusicControl";
 
 const SlideTransition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -89,6 +91,7 @@ const PlayerFullScreen = (props: DialogProps) => {
               }}
             >
               {/* <MusicLyric /> */}
+              <MusicRecord />
             </Stack>
           </Box>
           <Box sx={{ height: 80 }}>
@@ -99,7 +102,9 @@ const PlayerFullScreen = (props: DialogProps) => {
               borderColor: (theme) => alpha(theme.palette.common.white, 0.2),
             }}
           />
-          <Stack sx={{ height: 120 }}></Stack>
+          <Stack sx={{ height: 120 }}>
+            <MusicControl />
+          </Stack>
         </Stack>
       </Box>
     </Dialog>

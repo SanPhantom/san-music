@@ -25,12 +25,7 @@ const MusicCanvas = () => {
 
   const size = useSize(containerRef);
 
-  const [dataArray, setDataArray] = useState<Uint8Array>(new Uint8Array());
-
-  const latestDataArray = useLatest(dataArray);
-  const previousDataArray = usePrevious(dataArray);
-
-  const handleDrawCanvas = useMemoizedFn(() => {
+  const handleDrawCanvas = useMemoizedFn((dataArray) => {
     // draw canvas
     if (canvasRef.current) {
       const canvasCtx = canvasRef.current.getContext("2d");
@@ -41,12 +36,10 @@ const MusicCanvas = () => {
         grd.addColorStop(0, theme.palette.primary.main);
         grd.addColorStop(1, "#fff");
 
-        const lineWidth = Math.ceil(
-          (size?.width ?? 0) / latestDataArray.current.length
-        );
+        const lineWidth = Math.ceil((size?.width ?? 0) / dataArray.length);
 
-        for (let i = 0; i < latestDataArray.current.length; i++) {
-          const value = latestDataArray.current[i];
+        for (let i = 0; i < dataArray.length; i++) {
+          const value = dataArray[i];
 
           canvasCtx.fillStyle = theme.palette.primary.main;
           canvasCtx.fillRect(
@@ -73,13 +66,12 @@ const MusicCanvas = () => {
       const bufferLength = analyser.frequencyBinCount;
 
       const dataArray = new Uint8Array(bufferLength);
-      setDataArray(dataArray);
 
       const renderFrame = () => {
         requestAnimationFrame(renderFrame);
         // console.log(dataArray);
         analyser.getByteFrequencyData(dataArray);
-        handleDrawCanvas();
+        handleDrawCanvas(dataArray);
       };
       renderFrame();
     }

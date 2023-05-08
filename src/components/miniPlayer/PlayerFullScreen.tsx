@@ -88,7 +88,7 @@ const PlayerFullScreen = (props: DialogProps) => {
                 p: 2,
               }}
             >
-              <MusicLyric />
+              {/* <MusicLyric /> */}
             </Stack>
           </Box>
           <Box sx={{ height: 80 }}>

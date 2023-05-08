@@ -1,10 +1,10 @@
 import { Box, useTheme } from "@mui/material";
 import {
   useCreation,
+  useLatest,
   useMemoizedFn,
-  useMount,
+  usePrevious,
   useSize,
-  useUnmount,
 } from "ahooks";
 import { usePlayerModel } from "../models/usePlayerModel";
 
@@ -25,27 +25,42 @@ const MusicCanvas = () => {
 
   const size = useSize(containerRef);
 
-  const handleDrawCanvas = useMemoizedFn((dataArray) => {
+  const [dataArray, setDataArray] = useState<Uint8Array>(new Uint8Array());
+
+  const latestDataArray = useLatest(dataArray);
+  const previousDataArray = usePrevious(dataArray);
+
+  const handleDrawCanvas = useMemoizedFn(() => {
     // draw canvas
     if (canvasRef.current) {
       const canvasCtx = canvasRef.current.getContext("2d");
       if (canvasCtx) {
         canvasCtx.clearRect(0, 0, size?.width ?? 0, size?.height ?? 0);
         canvasCtx?.beginPath();
-        let grd = canvasCtx.createLinearGradient(0, 0, 600, 0);
-        grd.addColorStop(0, "#fff");
-        grd.addColorStop(1, theme.palette.primary.main);
-        const lineWidth = (size?.width ?? 0) / dataArray.length;
-        for (let i = 0; i < dataArray.length; i++) {
-          const value = dataArray[i * 2];
+        let grd = canvasCtx.createLinearGradient(0, 0, 0, 160);
+        grd.addColorStop(0, theme.palette.primary.main);
+        grd.addColorStop(1, "#fff");
 
-          canvasCtx.fillStyle = grd;
-          canvasCtx.fillRect(i * 2, size?.height ?? 0, lineWidth, -value + 1);
+        const lineWidth = Math.ceil(
+          (size?.width ?? 0) / latestDataArray.current.length
+        );
+
+        for (let i = 0; i < latestDataArray.current.length; i++) {
+          const value = latestDataArray.current[i];
+
+          canvasCtx.fillStyle = theme.palette.primary.main;
           canvasCtx.fillRect(
-            i * 2,
-            (size?.height ?? 0) - 20 - value,
+            i * lineWidth,
+            size?.height ?? 0,
             lineWidth,
-            0
+            -((value * (size?.height ?? 0)) / 255) + 1
+          );
+          canvasCtx.fillStyle = "red";
+          canvasCtx.fillRect(
+            i * lineWidth,
+            (value * (size?.height ?? 0)) / 255 + 1,
+            lineWidth,
+            1
           );
         }
       }
@@ -54,15 +69,17 @@ const MusicCanvas = () => {
 
   const initAudio = useMemoizedFn(() => {
     if (analyser && audioSource && audioCtx) {
-      const bufferLength = analyser.fftSize;
+      analyser.maxDecibels = 70;
+      const bufferLength = analyser.frequencyBinCount;
 
       const dataArray = new Uint8Array(bufferLength);
+      setDataArray(dataArray);
 
       const renderFrame = () => {
         requestAnimationFrame(renderFrame);
         // console.log(dataArray);
         analyser.getByteFrequencyData(dataArray);
-        handleDrawCanvas(dataArray);
+        handleDrawCanvas();
       };
       renderFrame();
     }
@@ -75,11 +92,23 @@ const MusicCanvas = () => {
   }, [size, analyser, audioSource]);
 
   return (
-    <Box ref={containerRef} sx={{ width: "100%", height: "100%" }}>
+    <Box
+      ref={containerRef}
+      sx={{ width: "100%", height: "100%", position: "relative" }}
+    >
       <canvas
         ref={canvasRef}
         width={size?.width ?? 0}
         height={size?.height ?? 0}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+        }}
       />
     </Box>
   );

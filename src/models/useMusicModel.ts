@@ -74,7 +74,12 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
       const res = await getSongDetail(state.currentSongId);
       const lyricsRes = await getSongLyric(state.currentSongId);
       const songInfo = res.songs[0];
-      setLyrics(formatLyric(lyricsRes.lrc.lyric, lyricsRes.tlyric.lyric));
+      setLyrics(
+        formatLyric(
+          (lyricsRes?.lrc ?? { lyric: "" })?.lyric ?? "",
+          (lyricsRes?.tlyric ?? { lyric: "" })?.lyric
+        )
+      );
       setState({
         playInfo: {
           id: songInfo.id,

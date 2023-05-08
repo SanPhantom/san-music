@@ -22,8 +22,8 @@ const BlurImage = (
           zIndex: 0,
           width: "100%",
           height: "100%",
-          background: (theme) => alpha(theme.palette.common.black, 0.7),
-          backdropFilter: "blur(12px)",
+          background: (theme) => alpha(theme.palette.common.black, 0.5),
+          backdropFilter: "blur(24px)",
         }}
       />
     </Box>

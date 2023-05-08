@@ -1,4 +1,4 @@
-import { useBoolean, useCreation, useMemoizedFn } from "ahooks";
+import { useBoolean, useCreation, useMemoizedFn, useUnmount } from "ahooks";
 import { createGlobalStore } from "hox";
 import { isEmpty } from "ramda";
 import { getSongUrl } from "../services/music.service";
@@ -16,8 +16,7 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
   ]);
 
   const playerRef = useRef<HTMLAudioElement>(new Audio());
-
-  const [audioCtx, setAudioCtx] = useState<AudioContext | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
 
   const [audioSource, setAudioSource] =
     useState<MediaElementAudioSourceNode | null>(null);
@@ -68,44 +67,28 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     }
   });
 
-  const clearPlayer = useMemoizedFn(() => {
-    playerRef.current?.removeEventListener("timeupdate", () => {});
-    playerRef.current?.removeEventListener("playing", () => {});
-    playerRef.current?.removeEventListener("play", () => {});
-    playerRef.current?.removeEventListener("seeked", () => {});
-    playerRef.current?.removeEventListener("ended", () => {});
-    playerRef.current?.removeEventListener("pause", () => {});
-    playerRef.current?.removeEventListener("canplay", () => {});
-    playerRef.current?.removeEventListener("waiting", () => {});
-  });
-
   useCreation(() => {
-    if (audioCtx) {
-      const baseAnalyser = new AnalyserNode(audioCtx);
-      baseAnalyser.fftSize = 2048;
-      setAnalyser(baseAnalyser);
-      setAudioSource(
-        new MediaElementAudioSourceNode(audioCtx, {
-          mediaElement: playerRef.current,
-        })
-      );
-    }
-  }, [audioCtx]);
-
-  useCreation(() => {
-    if (audioSource && analyser && audioCtx) {
+    if (audioSource && analyser && audioCtxRef.current) {
       audioSource?.connect(analyser);
-      analyser.connect(audioCtx.destination);
+      analyser.connect(audioCtxRef.current.destination);
     }
-  }, [analyser, audioSource, audioCtx]);
+  }, [analyser, audioSource]);
 
   useCreation(() => {
     playerRef.current.crossOrigin = "anonymous";
 
     playerRef.current?.addEventListener("playing", () => {
       startPlaying();
-      if (!audioCtx) {
-        setAudioCtx(new AudioContext());
+      if (!Boolean(audioCtxRef.current)) {
+        audioCtxRef.current = new AudioContext();
+        const baseAnalyser = new AnalyserNode(audioCtxRef.current);
+        baseAnalyser.fftSize = 2048;
+        setAnalyser(baseAnalyser);
+        setAudioSource(
+          new MediaElementAudioSourceNode(audioCtxRef.current, {
+            mediaElement: playerRef.current,
+          })
+        );
       }
     });
 
@@ -134,11 +117,14 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playerRef.current?.addEventListener("timeupdate", () => {
       setCurrentTime((playerRef.current?.currentTime ?? 0) * 1000);
     });
-
-    return () => {
-      clearPlayer();
-    };
   }, []);
+
+  useUnmount(() => {
+    audioCtxRef.current?.close();
+    analyser?.disconnect();
+    audioSource?.disconnect();
+    playerRef.current.pause();
+  });
 
   return {
     player: playerRef.current,
@@ -148,7 +134,7 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playMusic,
     nextMusic,
     prevMusic,
-    audioCtx,
+    audioCtx: audioCtxRef.current,
     audioSource,
     analyser,
   };

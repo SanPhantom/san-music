@@ -76,11 +76,6 @@ const PlayerFullScreen = (props: DialogProps) => {
               </Typography>
             </Stack>
           </Toolbar>
-          <Divider
-            sx={{
-              borderColor: (theme) => alpha(theme.palette.common.white, 0.2),
-            }}
-          />
           <Box sx={{ flex: 1, overflow: "auto" }}>
             <Stack
               sx={{
@@ -97,11 +92,6 @@ const PlayerFullScreen = (props: DialogProps) => {
           <Box sx={{ height: 80 }}>
             <MusicCanvas />
           </Box>
-          <Divider
-            sx={{
-              borderColor: (theme) => alpha(theme.palette.common.white, 0.2),
-            }}
-          />
           <Stack sx={{ height: 120 }}>
             <MusicControl />
           </Stack>

@@ -46,20 +46,22 @@ const MusicCanvas = () => {
         for (let i = 0; i < dataArray.length; i++) {
           const value = dataArray[i];
 
+          const height = (value * (size?.height ?? 0) * 2) / 255 + 1;
+
           canvasCtx.fillStyle = grd;
           canvasCtx.fillRect(
             i * lineWidth,
-            size?.height ?? 0,
+            ((size?.height ?? 0) - height) / 2,
             lineWidth,
-            -((value * (size?.height ?? 0)) / 255) + 1
+            height + 1
           );
-          canvasCtx.fillStyle = "red";
-          canvasCtx.fillRect(
-            i * lineWidth,
-            (value * (size?.height ?? 0)) / 255 + 1,
-            lineWidth,
-            1
-          );
+          // canvasCtx.fillStyle = "red";
+          // canvasCtx.fillRect(
+          //   i * lineWidth,
+          //   (value * (size?.height ?? 0)) / 255 + 1,
+          //   lineWidth,
+          //   value === 0 ? 1 : 6
+          // );
         }
       }
     }

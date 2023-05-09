@@ -7,17 +7,23 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { ReactComponent as NextMusicIcon } from "../../assets/icon/-xiayishou.svg";
 import { useMusicModel } from "../../models/useMusicModel";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
 import MusicLinearProgress from "../miniPlayer/MusicLinearProgress";
 import PlayController from "../miniPlayer/PlayController";
 import PlayerTimer from "../miniPlayer/PlayerTimer";
 import { usePlayerModel } from "../../models/usePlayerModel";
+import PlayerFullScreen from "../miniPlayer/PlayerFullScreen";
+import { useBoolean } from "ahooks";
+import NextIconButton from "../buttons/NextIconButton";
 
 const MusicMiniPlayer = () => {
   const { musicInfo } = useMusicModel((store) => [store.musicInfo]);
-  const { nextMusic } = usePlayerModel((store) => [store.nextMusic]);
+
+  const [
+    isFullScreen,
+    { setTrue: expansionFullScreen, setFalse: closeFullScreen },
+  ] = useBoolean(false);
 
   return (
     <Toolbar
@@ -38,7 +44,11 @@ const MusicMiniPlayer = () => {
           spacing={4}
         >
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
-            <Avatar src={musicInfo?.pic} variant="rounded">
+            <Avatar
+              src={musicInfo?.pic}
+              variant="rounded"
+              onClick={expansionFullScreen}
+            >
               <CircularProgress size={16} />
             </Avatar>
             <Stack>
@@ -66,16 +76,11 @@ const MusicMiniPlayer = () => {
 
           <Stack direction={"row"} spacing={1.5} alignItems={"center"}>
             <PlayController />
-            <IconButton sx={{ m: 0, p: 0 }} onClick={nextMusic}>
-              <SvgIcon
-                component={NextMusicIcon}
-                inheritViewBox
-                sx={{ fontSize: 42 }}
-              />
-            </IconButton>
+            <NextIconButton size={46} />
           </Stack>
         </Stack>
       </Stack>
+      <PlayerFullScreen open={isFullScreen} onClose={closeFullScreen} />
     </Toolbar>
   );
 };

@@ -1,12 +1,12 @@
 import { CalendarToday, Radio } from "@mui/icons-material";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { useCreation } from "ahooks";
 import NewSongsPull from "../components/NewSongsPull";
 import RecommendResource from "../components/RecommendResource";
 import SingleCard from "../components/common/SingleCard";
+import Title from "../components/common/Title";
 import MusicBanner from "../components/music/MusicBanner";
 import { getRecommendSongs } from "../services/playlist.service";
-import Title from "../components/common/Title";
 
 const FindMusicPage = () => {
   useCreation(async () => {

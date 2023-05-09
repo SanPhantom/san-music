@@ -4,6 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import routes from "./routes/router";
 import { HoxRoot } from "hox";
 import "./index.css";
+import "./animation.css";
 
 const theme = createTheme({
   palette: {

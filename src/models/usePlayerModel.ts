@@ -1,4 +1,4 @@
-import { useBoolean, useCreation, useMemoizedFn } from "ahooks";
+import { useBoolean, useCreation, useMemoizedFn, useUnmount } from "ahooks";
 import { createGlobalStore } from "hox";
 import { isEmpty } from "ramda";
 import { getSongUrl } from "../services/music.service";
@@ -15,7 +15,12 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     store.currentSongId,
   ]);
 
-  const playerRef = useRef<HTMLAudioElement | null>(new Audio());
+  const playerRef = useRef<HTMLAudioElement>(new Audio());
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const [audioSource, setAudioSource] =
+    useState<MediaElementAudioSourceNode | null>(null);
+  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
 
   const [isPlaying, { setTrue: startPlaying, setFalse: stopPlaying }] =
     useBoolean(false);
@@ -27,9 +32,7 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
   const playMusic = useMemoizedFn(async (id: string) => {
     const { data } = await getSongUrl(id);
     const url = data[0].url;
-    if (!playerRef.current) {
-      playerRef.current = new Audio();
-    }
+
     if (!isEmpty(url) && playerRef.current) {
       setMusicState({
         currentSongId: id,
@@ -64,21 +67,29 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     }
   });
 
-  const clearPlayer = useMemoizedFn(() => {
-    playerRef.current?.removeEventListener("timeupdate", () => {});
-    playerRef.current?.removeEventListener("playing", () => {});
-    playerRef.current?.removeEventListener("play", () => {});
-    playerRef.current?.removeEventListener("seeked", () => {});
-    playerRef.current?.removeEventListener("ended", () => {});
-    playerRef.current?.removeEventListener("pause", () => {});
-    playerRef.current?.removeEventListener("canplay", () => {});
-    playerRef.current?.removeEventListener("waiting", () => {});
-    playerRef.current = null;
-  });
+  useCreation(() => {
+    if (audioSource && analyser && audioCtxRef.current) {
+      audioSource?.connect(analyser);
+      analyser.connect(audioCtxRef.current.destination);
+    }
+  }, [analyser, audioSource]);
 
   useCreation(() => {
+    playerRef.current.crossOrigin = "anonymous";
+
     playerRef.current?.addEventListener("playing", () => {
       startPlaying();
+      if (!Boolean(audioCtxRef.current)) {
+        audioCtxRef.current = new AudioContext();
+        const baseAnalyser = new AnalyserNode(audioCtxRef.current);
+        baseAnalyser.fftSize = 2048;
+        setAnalyser(baseAnalyser);
+        setAudioSource(
+          new MediaElementAudioSourceNode(audioCtxRef.current, {
+            mediaElement: playerRef.current,
+          })
+        );
+      }
     });
 
     playerRef.current?.addEventListener("canplay", () => {
@@ -106,13 +117,14 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playerRef.current?.addEventListener("timeupdate", () => {
       setCurrentTime((playerRef.current?.currentTime ?? 0) * 1000);
     });
+  }, []);
 
-    return () => {
-      if (playerRef.current) {
-        clearPlayer();
-      }
-    };
-  }, [playerRef.current]);
+  useUnmount(() => {
+    audioCtxRef.current?.close();
+    analyser?.disconnect();
+    audioSource?.disconnect();
+    playerRef.current.pause();
+  });
 
   return {
     player: playerRef.current,
@@ -122,5 +134,8 @@ export const [usePlayerModel, getPlayerModel] = createGlobalStore(() => {
     playMusic,
     nextMusic,
     prevMusic,
+    audioCtx: audioCtxRef.current,
+    audioSource,
+    analyser,
   };
 });

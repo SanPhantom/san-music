@@ -1,8 +1,11 @@
 import { useAsyncEffect, useLatest, useMemoizedFn, useSetState } from "ahooks";
 import { createGlobalStore } from "hox";
-import { getSongDetail } from "../services/music.service";
+import { getSongDetail, getSongLyric } from "../services/music.service";
 import { formatArtists, formatImageSize } from "../utils";
 import { shuffleList } from "../utils/tools";
+import { LyricItemType } from "san-lyric/dist/types/components/Lyric";
+import { formatLyric } from "san-lyric";
+import { getImageColor } from "../utils/colors";
 
 export enum MusicPlayType {
   SuiJi = 0,
@@ -15,6 +18,7 @@ type PlayMusicInfoType = {
   name: string;
   art: string;
   id: string;
+  targetPic: string;
 };
 
 export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
@@ -28,6 +32,8 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
     playInfo: null as PlayMusicInfoType | null,
     duration: 0,
   });
+
+  const [lyrics, setLyrics] = useState<LyricItemType[]>([]);
 
   const currentSongRef = useLatest(state.currentSongId);
   const currentPlaylistRef = useLatest(state.currentPlaylistId);
@@ -64,19 +70,35 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
     }
   );
 
+  // const queryImageColor = useMemoizedFn(async (src: string) => {
+  //   const image = new Image();
+  //   image.crossOrigin = "*";
+  //   image.src = src;
+  //   const color = await getImageColor(image);
+  // });
+
   useAsyncEffect(async () => {
     if (state.currentSongId && state.currentSongId !== null) {
       const res = await getSongDetail(state.currentSongId);
+      const lyricsRes = await getSongLyric(state.currentSongId);
       const songInfo = res.songs[0];
+      setLyrics(
+        formatLyric(
+          (lyricsRes?.lrc ?? { lyric: "" })?.lyric ?? "",
+          (lyricsRes?.tlyric ?? { lyric: "" })?.lyric
+        )
+      );
       setState({
         playInfo: {
           id: songInfo.id,
           art: formatArtists(songInfo.ar),
           name: songInfo.name,
           pic: formatImageSize(songInfo.al.picUrl, 128),
+          targetPic: songInfo.al.picUrl,
         },
         duration: songInfo.dt,
       });
+      // queryImageColor(formatImageSize(songInfo.al.picUrl, 128));
     }
   }, [state.currentSongId]);
 
@@ -89,5 +111,6 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
     duration: state.duration,
     setState,
     musicListAction: handleMusicListAction,
+    lyrics,
   };
 });

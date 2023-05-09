@@ -1,8 +1,8 @@
 import { useMemoizedFn, useMount, useSetState } from "ahooks";
 import { createGlobalStore } from "hox";
-import { getLocalItem, setLocalItem } from "../config/localforage.config";
-import { loginStatus, loginByVisitor } from "../services/user.service";
-import { readCookieKey } from "../utils/cookie";
+import { setLocalItem } from "../config/localforage.config";
+import { loginByVisitor, loginStatus } from "../services/user.service";
+import { getScreenFps } from "san-lyric";
 
 type UserStateType = {
   isLogin: boolean;
@@ -13,6 +13,7 @@ type UserStateType = {
     id: string;
   } | null;
   cookie?: string;
+  userFps: number;
 };
 
 export const [useUserModel, getUserModel] = createGlobalStore(() => {
@@ -21,6 +22,7 @@ export const [useUserModel, getUserModel] = createGlobalStore(() => {
     isAnonymous: false,
     userInfo: null,
     cookie: undefined,
+    userFps: 0,
   });
 
   const updateLoginStatus = useMemoizedFn(async () => {
@@ -65,10 +67,15 @@ export const [useUserModel, getUserModel] = createGlobalStore(() => {
 
   useMount(async () => {
     await updateLoginStatus();
+    const fps = await getScreenFps?.();
+    updateUser({
+      userFps: fps ?? 0,
+    });
   });
 
   return {
     user,
+    userFps: user.userFps,
     updateUser,
     updateLoginStatus,
   };

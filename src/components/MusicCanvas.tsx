@@ -1,14 +1,6 @@
 import { Box, useTheme } from "@mui/material";
-import {
-  useCreation,
-  useLatest,
-  useMemoizedFn,
-  usePrevious,
-  useSize,
-} from "ahooks";
+import { useMemoizedFn, useSize } from "ahooks";
 import { usePlayerModel } from "../models/usePlayerModel";
-
-interface IMusicCanvasProps {}
 
 // const lineWidth = 4;
 
@@ -55,13 +47,6 @@ const MusicCanvas = () => {
             lineWidth,
             height + 1
           );
-          // canvasCtx.fillStyle = "red";
-          // canvasCtx.fillRect(
-          //   i * lineWidth,
-          //   (value * (size?.height ?? 0)) / 255 + 1,
-          //   lineWidth,
-          //   value === 0 ? 1 : 6
-          // );
         }
       }
     }

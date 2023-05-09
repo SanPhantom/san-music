@@ -3,7 +3,6 @@ import {
   Box,
   Dialog,
   DialogProps,
-  Divider,
   IconButton,
   Slide,
   Stack,
@@ -13,7 +12,6 @@ import {
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
 import React from "react";
-import MusicLyric from "../music/MusicLyric";
 import { useMusicModel } from "../../models/useMusicModel";
 import BlurImage from "../common/Image/BlurImage";
 import MusicCanvas from "../MusicCanvas";
@@ -71,9 +69,7 @@ const PlayerFullScreen = (props: DialogProps) => {
               <Typography variant="body1" fontWeight={600}>
                 {musicInfo?.name}
               </Typography>
-              <Typography color={"grey"} variant="body2">
-                {musicInfo?.art}
-              </Typography>
+              <Typography variant="body2">{musicInfo?.art}</Typography>
             </Stack>
           </Toolbar>
           <Box sx={{ flex: 1, overflow: "auto" }}>
@@ -85,7 +81,6 @@ const PlayerFullScreen = (props: DialogProps) => {
                 p: 2,
               }}
             >
-              {/* <MusicLyric /> */}
               <MusicRecord />
             </Stack>
           </Box>

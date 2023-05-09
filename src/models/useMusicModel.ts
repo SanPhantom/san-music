@@ -5,6 +5,7 @@ import { formatArtists, formatImageSize } from "../utils";
 import { shuffleList } from "../utils/tools";
 import { LyricItemType } from "san-lyric/dist/types/components/Lyric";
 import { formatLyric } from "san-lyric";
+import { getImageColor } from "../utils/colors";
 
 export enum MusicPlayType {
   SuiJi = 0,
@@ -69,6 +70,13 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
     }
   );
 
+  // const queryImageColor = useMemoizedFn(async (src: string) => {
+  //   const image = new Image();
+  //   image.crossOrigin = "*";
+  //   image.src = src;
+  //   const color = await getImageColor(image);
+  // });
+
   useAsyncEffect(async () => {
     if (state.currentSongId && state.currentSongId !== null) {
       const res = await getSongDetail(state.currentSongId);
@@ -90,6 +98,7 @@ export const [useMusicModel, getMusicModel] = createGlobalStore(() => {
         },
         duration: songInfo.dt,
       });
+      // queryImageColor(formatImageSize(songInfo.al.picUrl, 128));
     }
   }, [state.currentSongId]);
 

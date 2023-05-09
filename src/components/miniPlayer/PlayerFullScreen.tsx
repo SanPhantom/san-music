@@ -8,17 +8,15 @@ import {
   Stack,
   Toolbar,
   Typography,
-  alpha,
 } from "@mui/material";
 import type { TransitionProps } from "@mui/material/transitions";
-import React from "react";
 import { useMusicModel } from "../../models/useMusicModel";
 import BlurImage from "../common/Image/BlurImage";
 import MusicCanvas from "../MusicCanvas";
 import MusicRecord from "../music/MusicRecord";
 import MusicControl from "../music/MusicControl";
 
-const SlideTransition = React.forwardRef(function Transition(
+const SlideTransition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
   },

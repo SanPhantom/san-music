@@ -1,4 +1,3 @@
-import React from "react";
 import { useMusicModel } from "../../models/useMusicModel";
 import { Avatar, Box, Stack } from "@mui/material";
 import { useCreation, useSize } from "ahooks";

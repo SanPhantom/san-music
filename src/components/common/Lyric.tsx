@@ -1,5 +1,5 @@
+import { findLastIndex } from "ramda";
 import { LyricItemType } from "san-lyric/dist/types/components/Lyric";
-import { findLastIndex } from "../../utils/tools";
 
 interface ILyricProps {
   lyrics: LyricItemType[];
@@ -75,8 +75,8 @@ const Lyric = ({
     const currentTime = Math.floor(player.currentTime * 1000);
 
     const playCurrent = findLastIndex(
-      lyricsRef.current,
-      (item: LyricItemType) => currentTime >= item.time
+      (item: LyricItemType) => currentTime >= item.time,
+      lyricsRef.current
     );
 
     if (
@@ -87,11 +87,6 @@ const Lyric = ({
     ) {
       if (!isLock.current) {
         if (playCurrent !== currentRef.current && playCurrent !== -1) {
-          console.log({
-            playCurrent,
-            length: lyricsRef.current.length,
-            currentTime,
-          });
           const offsetTop = (
             rootRef.current.children[playCurrent] as HTMLDivElement
           ).offsetTop;

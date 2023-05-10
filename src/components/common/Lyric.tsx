@@ -1,4 +1,5 @@
 import { LyricItemType } from "san-lyric/dist/types/components/Lyric";
+import { findLastIndex } from "../../utils/tools";
 
 interface ILyricProps {
   lyrics: LyricItemType[];
@@ -73,7 +74,8 @@ const Lyric = ({
 
     const currentTime = Math.floor(player.currentTime * 1000);
 
-    const playCurrent = lyricsRef.current.findLastIndex(
+    const playCurrent = findLastIndex(
+      lyricsRef.current,
       (item: LyricItemType) => currentTime >= item.time
     );
 

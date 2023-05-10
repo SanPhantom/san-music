@@ -1,19 +1,16 @@
-import { Box, useTheme } from "@mui/material";
-import { Lyric } from "san-lyric";
+import { Box, alpha, useTheme } from "@mui/material";
 import { useMusicModel } from "../../models/useMusicModel";
 import { usePlayerModel } from "../../models/usePlayerModel";
-import { useUserModel } from "../../models/useUserModel";
-import "san-lyric/dist/main.css";
+import Lyric from "../common/Lyric";
 
 const MusicLyric = () => {
   const theme = useTheme();
-  const { duration, lyrics } = useMusicModel((state) => [
+  const { lyrics } = useMusicModel((state) => [
     state.currentSongId,
     state.duration,
     state.lyrics,
   ]);
-  const { currentTime } = usePlayerModel((state) => [state.currentTime]);
-  const { userFps } = useUserModel((state) => [state.userFps]);
+  const { player } = usePlayerModel((state) => [state.player]);
 
   return (
     <Box
@@ -25,11 +22,9 @@ const MusicLyric = () => {
     >
       <Lyric
         lyrics={lyrics}
-        currentTime={currentTime}
-        duration={duration}
-        fps={userFps}
-        selectColor={theme.palette.primary.main}
-        color={theme.palette.common.white}
+        player={player}
+        color={alpha(theme.palette.common.white, 0.45)}
+        selectedColor={theme.palette.common.white}
       />
     </Box>
   );

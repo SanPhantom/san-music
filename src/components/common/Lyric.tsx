@@ -1,11 +1,3 @@
-import { useMemoizedFn } from "ahooks";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
 import { LyricItemType } from "san-lyric/dist/types/components/Lyric";
 
 interface ILyricProps {
@@ -26,7 +18,7 @@ const Lyric = ({
   player,
   lyrics,
   selectedColor = "red",
-  color = "black",
+  color = "white",
   selectBgColor = "transparent",
 }: ILyricProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,7 +38,7 @@ const Lyric = ({
   const isLock = useRef<boolean>(false);
   const startRef = useRef<number>(0);
 
-  let timer: number;
+  let timer: NodeJS.Timeout | number;
 
   const scrollLyric = useCallback(() => {
     if (containerRef.current) {
@@ -57,11 +49,11 @@ const Lyric = ({
         startRef.current,
         currentScrollHeightRef.current,
         scrollHeightRef.current - currentScrollHeightRef.current,
-        10
+        120
       );
 
       containerRef.current.scrollTop = top;
-      if (startRef.current <= 10) {
+      if (startRef.current <= 120) {
         scrollAnimationRef.current = requestAnimationFrame(scrollLyric);
       } else {
         currentScrollHeightRef.current = top;
@@ -84,20 +76,29 @@ const Lyric = ({
     const playCurrent = lyricsRef.current.findLastIndex(
       (item) => currentTime >= item.time
     );
-    if (rootRef.current && beforeContainerRef.current && containerRef.current) {
-      const offsetTop = (
-        rootRef.current.children[playCurrent] as HTMLDivElement
-      ).offsetTop;
-      const beforeHeight =
-        beforeContainerRef.current.getBoundingClientRect().height;
-      const beforeOffsetTop = containerRef.current.getBoundingClientRect().top;
+
+    if (
+      rootRef.current &&
+      beforeContainerRef.current &&
+      containerRef.current &&
+      rootRef.current.children.length
+    ) {
       if (!isLock.current) {
-        if (playCurrent !== currentRef.current) {
+        if (playCurrent !== currentRef.current && playCurrent !== -1) {
+          console.log({
+            playCurrent,
+            length: lyricsRef.current.length,
+            currentTime,
+          });
+          const offsetTop = (
+            rootRef.current.children[playCurrent] as HTMLDivElement
+          ).offsetTop;
+          const beforeHeight =
+            beforeContainerRef.current.getBoundingClientRect().height;
+          const beforeOffsetTop = containerRef.current.offsetTop;
           scrollHeightRef.current = offsetTop - beforeOffsetTop - beforeHeight;
           scrollAnimationRef.current = requestAnimationFrame(scrollLyric);
         }
-        // containerRef.current.scrollTop =
-        //   offsetTop - beforeOffsetTop - beforeHeight;
       }
     }
 
@@ -105,24 +106,19 @@ const Lyric = ({
   }, [player, lyrics, setCurrent, current]);
 
   useEffect(() => {
-    if (lyrics.length) {
-      currentRef.current = current;
-      lyricsRef.current = lyrics;
-    }
-  }, [current, lyrics]);
+    currentRef.current = current;
+  }, [current]);
 
   useEffect(() => {
-    if (player) {
-      player.onplaying = () => {
-        animationRef.current = window.requestAnimationFrame(render);
-      };
-    }
-    return () => {
+    if (lyrics.length) {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-    };
-  }, [player]);
+      isLock.current = false;
+      lyricsRef.current = lyrics;
+      animationRef.current = window.requestAnimationFrame(render);
+    }
+  }, [lyrics]);
 
   useEffect(() => {
     containerRef.current?.addEventListener("touchstart", (e) => {
@@ -144,15 +140,29 @@ const Lyric = ({
         isLock.current = false;
       }, 2000);
     });
+
+    containerRef.current?.addEventListener("wheel", () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      isLock.current = true;
+      timer = setTimeout(() => {
+        isLock.current = false;
+      }, 2000);
+    });
     return () => {
       containerRef.current?.removeEventListener("touchstart", () => {});
       containerRef.current?.removeEventListener("touchend", () => {});
       containerRef.current?.removeEventListener("touchcancel", () => {});
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
   }, []);
 
   return (
     <div
+      className="lyric-root"
       ref={containerRef}
       style={{ width: "100%", height: "100%", overflow: "auto" }}
     >

@@ -74,7 +74,7 @@ const Lyric = ({
     const currentTime = Math.floor(player.currentTime * 1000);
 
     const playCurrent = lyricsRef.current.findLastIndex(
-      (item) => currentTime >= item.time
+      (item: LyricItemType) => currentTime >= item.time
     );
 
     if (

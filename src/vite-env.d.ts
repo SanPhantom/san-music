@@ -7,3 +7,12 @@ declare module "*.svg" {
     React.SVGProps<SVGSVGElement> & { title?: string }
   >;
 }
+
+declare global {
+  interface Array<T> {
+    findLastIndex(
+      predicate: (value: T, index: number, obj: T[]) => unknown,
+      thisArg?: any
+    ): number;
+  }
+}

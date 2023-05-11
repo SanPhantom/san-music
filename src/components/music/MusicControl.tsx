@@ -1,20 +1,11 @@
-import {
-  Box,
-  IconButton,
-  Slider,
-  Stack,
-  SvgIcon,
-  Typography,
-  alpha,
-  useTheme,
-} from "@mui/material";
+import { Slider, Stack, Typography, alpha, useTheme } from "@mui/material";
+import { useBoolean } from "ahooks";
+import { useMusicModel } from "../../models/useMusicModel";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { transTime } from "../../utils";
-import { useMusicModel } from "../../models/useMusicModel";
-import PlayController from "../miniPlayer/PlayController";
-import PrevIconButton from "../buttons/PrevIconButton";
 import NextIconButton from "../buttons/NextIconButton";
-import { useBoolean } from "ahooks";
+import PrevIconButton from "../buttons/PrevIconButton";
+import PlayController from "../miniPlayer/PlayController";
 
 interface IMusicControlProps {}
 
@@ -66,9 +57,9 @@ const MusicControl = () => {
                 height: 8,
                 transition: "0.3s cubic-bezier(.47,1.64,.41,.8)",
                 "&:before": {
-                  boxShadow: "0 2px 12px 0 rgba(0,0,0,0.4)",
+                  boxShadow: "0 2px 12px 0 rgba(255,255,255,0.4)",
                 },
-                "&:hover, &.Mui-focusVisible": {
+                "&.Mui-focusVisible": {
                   boxShadow: `0px 0px 0px 8px ${alpha(
                     theme.palette.primary.main,
                     0.16
@@ -80,7 +71,12 @@ const MusicControl = () => {
                 },
               },
               "& .MuiSlider-rail": {
+                backgroundColor: (theme) => theme.palette.common.white,
                 opacity: 0.28,
+              },
+              "& .MuiSlider-track": {
+                background: (theme) =>
+                  `linear-gradient(135deg, #81fbb8, ${theme.palette.primary.main})`,
               },
             }}
           />

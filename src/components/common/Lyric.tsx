@@ -34,6 +34,7 @@ const Lyric = ({
   const currentRef = useRef(current);
   const lyricsRef = useRef(lyrics);
 
+  const currentLineHeightRef = useRef<number>(0);
   const currentScrollHeightRef = useRef<number>(0);
   const scrollHeightRef = useRef<number>(0);
   const isLock = useRef<boolean>(false);
@@ -43,18 +44,18 @@ const Lyric = ({
 
   const scrollLyric = useCallback(() => {
     if (containerRef.current) {
-      isLock.current = true;
+      // isLock.current = true;
       startRef.current++;
 
       const top = sports.linear(
         startRef.current,
         currentScrollHeightRef.current,
         scrollHeightRef.current - currentScrollHeightRef.current,
-        120
+        currentLineHeightRef.current
       );
 
       containerRef.current.scrollTop = top;
-      if (startRef.current <= 120) {
+      if (startRef.current <= currentLineHeightRef.current) {
         scrollAnimationRef.current = requestAnimationFrame(scrollLyric);
       } else {
         currentScrollHeightRef.current = top;
@@ -63,7 +64,6 @@ const Lyric = ({
           scrollHeightRef.current = 0;
           animationRef.current = null;
           startRef.current = 0;
-          isLock.current = false;
         }
       }
     }
@@ -85,14 +85,24 @@ const Lyric = ({
       containerRef.current &&
       rootRef.current.children.length
     ) {
-      if (!isLock.current) {
-        if (playCurrent !== currentRef.current && playCurrent !== -1) {
+      if (playCurrent !== currentRef.current && playCurrent !== -1) {
+        if (scrollAnimationRef.current) {
+          currentScrollHeightRef.current = containerRef.current.scrollTop;
+          cancelAnimationFrame(scrollAnimationRef.current);
+          scrollHeightRef.current = 0;
+          animationRef.current = null;
+          startRef.current = 0;
+        }
+        if (!isLock.current) {
           const offsetTop = (
             rootRef.current.children[playCurrent] as HTMLDivElement
           ).offsetTop;
           const beforeHeight =
             beforeContainerRef.current.getBoundingClientRect().height;
           const beforeOffsetTop = containerRef.current.offsetTop;
+          currentLineHeightRef.current = (
+            rootRef.current.children[playCurrent] as HTMLDivElement
+          ).getBoundingClientRect().height;
           scrollHeightRef.current = offsetTop - beforeOffsetTop - beforeHeight;
           scrollAnimationRef.current = requestAnimationFrame(scrollLyric);
         }
@@ -113,7 +123,8 @@ const Lyric = ({
       }
       isLock.current = false;
       lyricsRef.current = lyrics;
-      animationRef.current = window.requestAnimationFrame(render);
+      render();
+      // animationRef.current = window.requestAnimationFrame(render);
     }
   }, [lyrics]);
 

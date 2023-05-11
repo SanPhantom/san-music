@@ -12,7 +12,6 @@ import {
 import type { TransitionProps } from "@mui/material/transitions";
 import { useMusicModel } from "../../models/useMusicModel";
 import BlurImage from "../common/Image/BlurImage";
-import MusicCanvas from "../MusicCanvas";
 import MusicRecord from "../music/MusicRecord";
 import MusicControl from "../music/MusicControl";
 import MusicLyric from "../music/MusicLyric";
@@ -84,9 +83,6 @@ const PlayerFullScreen = (props: DialogProps) => {
               <MusicRecord />
               <MusicLyric />
             </Stack>
-          </Box>
-          <Box sx={{ height: 80 }}>
-            <MusicCanvas />
           </Box>
           <Stack sx={{ height: 120 }}>
             <MusicControl />

@@ -42,9 +42,20 @@ const Lyric = ({
 
   let timer: NodeJS.Timeout | number;
 
+  const clearScrollLyric = useCallback(() => {
+    if (containerRef.current) {
+      currentScrollHeightRef.current = containerRef.current?.scrollTop;
+    }
+    if (scrollAnimationRef.current) {
+      cancelAnimationFrame(scrollAnimationRef.current);
+    }
+    scrollHeightRef.current = 0;
+    animationRef.current = null;
+    startRef.current = 0;
+  }, []);
+
   const scrollLyric = useCallback(() => {
     if (containerRef.current) {
-      // isLock.current = true;
       startRef.current++;
 
       const top = sports.linear(
@@ -58,13 +69,7 @@ const Lyric = ({
       if (startRef.current <= currentLineHeightRef.current) {
         scrollAnimationRef.current = requestAnimationFrame(scrollLyric);
       } else {
-        currentScrollHeightRef.current = top;
-        if (scrollAnimationRef.current) {
-          cancelAnimationFrame(scrollAnimationRef.current);
-          scrollHeightRef.current = 0;
-          animationRef.current = null;
-          startRef.current = 0;
-        }
+        clearScrollLyric();
       }
     }
   }, []);
@@ -87,11 +92,7 @@ const Lyric = ({
     ) {
       if (playCurrent !== currentRef.current && playCurrent !== -1) {
         if (scrollAnimationRef.current) {
-          currentScrollHeightRef.current = containerRef.current.scrollTop;
-          cancelAnimationFrame(scrollAnimationRef.current);
-          scrollHeightRef.current = 0;
-          animationRef.current = null;
-          startRef.current = 0;
+          clearScrollLyric();
         }
         if (!isLock.current) {
           const offsetTop = (
@@ -124,7 +125,6 @@ const Lyric = ({
       isLock.current = false;
       lyricsRef.current = lyrics;
       render();
-      // animationRef.current = window.requestAnimationFrame(render);
     }
   }, [lyrics]);
 

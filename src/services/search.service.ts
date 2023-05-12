@@ -17,6 +17,7 @@ export const searchSuggest = (keywords: string) => {
   return musicAxios.get<any, any>("/search/suggest", {
     params: {
       keywords,
+      type: "mobile",
     },
   });
 };

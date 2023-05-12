@@ -4,8 +4,10 @@ import { newSongExpress } from "../services/playlist.service";
 import LoadingView from "./common/LoadingView";
 import Title from "./common/Title";
 import MusicSongItem from "./music/MusicSongItem";
+import { useMusicModel } from "../models/useMusicModel";
 
 const NewSongsPull = () => {
+  const { musicListAction } = useMusicModel((store) => [store.musicListAction]);
   const { data, run, loading } = useRequest(newSongExpress, {
     manual: true,
   });
@@ -31,7 +33,13 @@ const NewSongsPull = () => {
             }}
           >
             {(data?.result ?? []).slice(0, 5).map((item: any) => (
-              <MusicSongItem key={item.id} song={item.song} />
+              <MusicSongItem
+                key={item.id}
+                song={item.song}
+                onItemClick={() => {
+                  musicListAction("add", item.id);
+                }}
+              />
             ))}
           </Stack>
           <Stack
@@ -46,7 +54,13 @@ const NewSongsPull = () => {
             }}
           >
             {(data?.result ?? []).slice(5, 10).map((item: any) => (
-              <MusicSongItem key={item.id} song={item.song} />
+              <MusicSongItem
+                key={item.id}
+                song={item.song}
+                onItemClick={() => {
+                  musicListAction("add", item.id);
+                }}
+              />
             ))}
           </Stack>
         </Stack>

@@ -12,9 +12,9 @@ import {
 import type { TransitionProps } from "@mui/material/transitions";
 import { useMusicModel } from "../../models/useMusicModel";
 import BlurImage from "../common/Image/BlurImage";
-import MusicCanvas from "../MusicCanvas";
 import MusicRecord from "../music/MusicRecord";
 import MusicControl from "../music/MusicControl";
+import MusicLyric from "../music/MusicLyric";
 
 const SlideTransition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -77,13 +77,12 @@ const PlayerFullScreen = (props: DialogProps) => {
                 alignItems: "center",
                 justifyContent: "center",
                 p: 2,
+                flexDirection: "row",
               }}
             >
               <MusicRecord />
+              <MusicLyric />
             </Stack>
-          </Box>
-          <Box sx={{ height: 80 }}>
-            <MusicCanvas />
           </Box>
           <Stack sx={{ height: 120 }}>
             <MusicControl />

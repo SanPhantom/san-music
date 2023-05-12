@@ -2,3 +2,12 @@
   width: 100%;
   height: 100%;
 }
+
+.lyric-root::-webkit-scrollbar {
+  display: none;
+  user-select: none;
+}
+
+.lyric-root {
+  user-select: none;
+}

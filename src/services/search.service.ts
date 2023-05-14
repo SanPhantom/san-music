@@ -23,12 +23,12 @@ export const searchSuggest = (keywords: string) => {
 };
 
 export const search = (data: {
-  type?: keyof typeof SearchKey;
+  type?: SearchKey;
   keywords: string;
   offset: number;
   limit?: number;
 }) => {
-  return musicAxios.get<any, any>("/search", {
+  return musicAxios.get<any, any>("/cloudsearch", {
     params: {
       keywords: data.keywords,
       limit: data.limit ?? 10,

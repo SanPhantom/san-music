@@ -1,3 +1,5 @@
+import { SearchKey } from "../constants";
+
 export const shuffleList = (arr: Array<any>) => {
   let len = arr.length;
   while (0 !== len) {
@@ -21,4 +23,17 @@ export const findLastIndex = <T>(array: Array<T>, callback: Function) => {
     }
   }
   return -1;
+};
+
+export const enum2Array = (enumData: typeof SearchKey) => {
+  const arrayObjects = [];
+
+  for (const [propertyKey, propertyValue] of Object.entries(enumData)) {
+    if (!Number.isNaN(Number(propertyKey))) {
+      continue;
+    }
+    arrayObjects.push({ id: propertyValue, name: propertyKey });
+  }
+
+  return arrayObjects;
 };

@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useCreation } from "ahooks";
-import { isEmpty } from "ramda";
 import { useMusicModel } from "../../models/useMusicModel";
 import { usePlayerModel } from "../../models/usePlayerModel";
 import { formatArtists, formatImageSize } from "../../utils";
@@ -23,13 +22,19 @@ interface IMusicSongItemProps {
   onItemClick?: (song: any) => void;
 }
 
-const MusicItemPrimary = ({ song }: IMusicSongItemProps) => {
+const MusicItemPrimary = ({
+  song,
+  isCopyright,
+}: {
+  song: any;
+  isCopyright: boolean;
+}) => {
   return (
     <EllipsisText variant="body2">
       <Typography
         component={"span"}
         variant="body1"
-        color={false ? "primary.main" : ""}
+        color={isCopyright ? "text.disabled" : "text.primary"}
         fontWeight={600}
       >
         {song.name}
@@ -69,12 +74,11 @@ const MusicSongItem = ({
 
   const { isVip, isCover, isCopyright } = useCreation(() => {
     return {
-      isVip: song.fee === 1,
+      isVip: song.noCopyrightRcmd === null && song.fee === 1,
       isCover: song.originCoverType === 2,
-      isCopyright: isEmpty(song.noCopyrightRcmd),
+      isCopyright: song.noCopyrightRcmd !== null,
     };
   }, [song]);
-
   return (
     <ListItem
       className="song-item"
@@ -141,7 +145,7 @@ const MusicSongItem = ({
         )}
         <ListItemText
           sx={{ my: 0 }}
-          primary={<MusicItemPrimary song={song} />}
+          primary={<MusicItemPrimary song={song} isCopyright={isCopyright} />}
           secondaryTypographyProps={{
             component: Stack,
           }}
@@ -173,7 +177,6 @@ const MusicSongItem = ({
                     border: 1,
                     lineHeight: 1,
                     px: 0.25,
-                    py: 0.21,
                     color: "primary.main",
                     borderRadius: 0.5,
                   }}
@@ -181,22 +184,24 @@ const MusicSongItem = ({
                   翻唱
                 </Typography>
               )}
-              {isCopyright && (
+              {/* {isCopyright && (
                 <Typography
                   variant="caption"
                   sx={{
                     border: 1,
                     lineHeight: 1,
                     px: 0.25,
-                    py: 0.21,
                     color: "text.disabled",
                     borderRadius: 0.5,
                   }}
                 >
-                  暂无版权
+                  {song.noCopyrightRcmd?.typeDesc}
                 </Typography>
-              )}
-              <Typography variant="body2" color="text.secondary">
+              )} */}
+              <Typography
+                variant="body2"
+                color={isCopyright ? "text.disabled" : "text.secondary"}
+              >
                 {artist}
                 {isCover &&
                   `(原唱：${formatArtists(

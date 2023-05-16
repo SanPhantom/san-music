@@ -1,22 +1,20 @@
-import { useRequest } from "ahooks";
-import React from "react";
-import { search } from "../../services/search.service";
-import { isEmpty } from "ramda";
-import { Done, MoreVert } from "@mui/icons-material";
+import { MoreVert } from "@mui/icons-material";
 import {
-  Stack,
-  ListItem,
-  Chip,
-  ListItemAvatar,
   Avatar,
-  ListItemText,
-  Pagination,
   Box,
   IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Pagination,
+  Stack,
 } from "@mui/material";
-import LoadingView from "../common/LoadingView";
+import { useRequest } from "ahooks";
+import { isEmpty } from "ramda";
+import { search } from "../../services/search.service";
 import { formatImageSize } from "../../utils";
 import { formatNumber } from "../../utils/tools";
+import LoadingView from "../common/LoadingView";
 
 interface ISearchPlaylistProps {
   searchKey: string | null;

@@ -1,9 +1,9 @@
-import { Box, Pagination, Stack } from "@mui/material";
 import { useRequest } from "ahooks";
 import { isEmpty } from "ramda";
 import { search } from "../../services/search.service";
-import LoadingView from "../common/LoadingView";
-import MusicSongItem from "../music/MusicSongItem";
+import MusicSongItem from "../ListItem/MusicSongItem";
+import SearchResult from "./SearchResult";
+import { Stack } from "@mui/material";
 
 interface ISearchSongProps {
   searchKey: string | null;
@@ -36,35 +36,26 @@ const SearchSong = ({ searchKey }: ISearchSongProps) => {
   }, [searchKey, offset]);
 
   return (
-    <Stack sx={{ gap: 2, alignItems: "center", height: "100%" }}>
-      <Box sx={{ flex: 1, width: "100%", overflow: "auto" }}>
-        <LoadingView loading={loading} minHeight={240}>
-          <Stack sx={{ width: "100%" }}>
-            {songList.map((item: any, index: number) => (
-              <MusicSongItem
-                showAction
-                key={item.id}
-                song={item}
-                index={index + 1}
-                onItemClick={() => {
-                  // musicListAction("add", item.id);
-                }}
-              />
-            ))}
-          </Stack>
-        </LoadingView>
-      </Box>
-
-      <Pagination
-        count={Math.ceil(totalNumber / limit)}
-        shape="rounded"
-        // variant="outlined"
-        color="primary"
-        onChange={(_, page) => {
-          setOffset(page);
-        }}
-      />
-    </Stack>
+    <SearchResult
+      loading={loading}
+      total={totalNumber}
+      limit={limit}
+      onChangePage={setOffset}
+    >
+      <Stack sx={{ width: "100%" }}>
+        {songList.map((item: any, index: number) => (
+          <MusicSongItem
+            showAction
+            key={item.id}
+            song={item}
+            index={index + 1}
+            onItemClick={() => {
+              // musicListAction("add", item.id);
+            }}
+          />
+        ))}
+      </Stack>
+    </SearchResult>
   );
 };
 

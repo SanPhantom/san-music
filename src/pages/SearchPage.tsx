@@ -5,6 +5,7 @@ import SearchArtists from "../components/search/SearchArtists";
 import SearchPlaylist from "../components/search/SearchPlaylist";
 import SearchSong from "../components/search/SearchSong";
 import { SearchKey } from "../constants";
+import SearchMv from "../components/search/SearchMv";
 
 const SearchPage = () => {
   const [params] = useSearchParams();
@@ -68,6 +69,7 @@ const SearchPage = () => {
         <SearchSong searchKey={searchKey} />
         <SearchArtists searchKey={searchKey} />
         <SearchPlaylist searchKey={searchKey} />
+        <SearchMv searchKey={searchKey} />
       </SwipeableViews>
     </Stack>
   );

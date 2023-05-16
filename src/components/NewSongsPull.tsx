@@ -3,7 +3,7 @@ import { useMount, useRequest } from "ahooks";
 import { newSongExpress } from "../services/playlist.service";
 import LoadingView from "./common/LoadingView";
 import Title from "./common/Title";
-import MusicSongItem from "./music/MusicSongItem";
+import MusicSongItem from "./ListItem/MusicSongItem";
 import { useMusicModel } from "../models/useMusicModel";
 
 const NewSongsPull = () => {

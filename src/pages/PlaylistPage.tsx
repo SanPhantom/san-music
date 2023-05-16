@@ -3,7 +3,7 @@ import { Button, Divider, Paper, Stack } from "@mui/material";
 import { useCreation, useLatest, useMemoizedFn, useRequest } from "ahooks";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingView from "../components/common/LoadingView";
-import MusicSongItem from "../components/music/MusicSongItem";
+import MusicSongItem from "../components/ListItem/MusicSongItem";
 import PlaylistHeader from "../components/playlist/PlaylistHeader";
 import {
   getPlaylistDetail,

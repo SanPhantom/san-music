@@ -1,20 +1,26 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
+import SwipeableViews from "react-swipeable-views";
 import { StyledTab, StyledTabs } from "../components/common/CommonTabs";
-import { SearchKey } from "../constants";
-import { enum2Array } from "../utils/tools";
+import SearchArtists from "../components/search/SearchArtists";
+import SearchPlaylist from "../components/search/SearchPlaylist";
 import SearchSong from "../components/search/SearchSong";
-import SearchArticle from "../components/search/SearchArticle";
+import { SearchKey } from "../constants";
 
 const SearchPage = () => {
   const [params] = useSearchParams();
   const searchKey = params.get("s");
 
-  const tabsData = enum2Array(SearchKey);
+  const tabsData = [
+    SearchKey[1],
+    SearchKey[100],
+    SearchKey[1000],
+    SearchKey[1004],
+  ];
 
-  const [searchType, setSearchType] = useState(tabsData[0].id);
+  const [searchType, setSearchType] = useState(0);
 
   return (
-    <Stack>
+    <Stack id="searchPage" sx={{ height: "inherit" }}>
       <Box sx={{ mb: 2 }}>
         <Typography
           component={"span"}
@@ -30,7 +36,7 @@ const SearchPage = () => {
         </Typography>
       </Box>
       <StyledTabs
-        value={searchType as number}
+        value={searchType}
         variant="scrollable"
         scrollButtons="auto"
         sx={{
@@ -42,19 +48,27 @@ const SearchPage = () => {
         }}
         onChange={(_, newValue) => setSearchType(newValue)}
       >
-        {[SearchKey[1], SearchKey[100], SearchKey[1000], SearchKey[1004]].map(
-          (item: any) => (
-            <StyledTab
-              key={SearchKey[item]}
-              label={item}
-              value={SearchKey[item]}
-            />
-          )
-        )}
+        {tabsData.map((item: any) => (
+          <StyledTab key={SearchKey[item]} label={item} />
+        ))}
       </StyledTabs>
-      {}
-      <SearchSong searchKey={searchKey} />
-      <SearchArticle searchKey={searchKey} />
+      <Divider />
+      <SwipeableViews
+        disableLazyLoading
+        index={searchType}
+        onChangeIndex={(index) => {
+          setSearchType(index);
+        }}
+        containerStyle={{ height: "100%" }}
+        style={{ height: "100%", marginTop: 8 }}
+        slideStyle={{
+          height: "100%",
+        }}
+      >
+        <SearchSong searchKey={searchKey} />
+        <SearchArtists searchKey={searchKey} />
+        <SearchPlaylist searchKey={searchKey} />
+      </SwipeableViews>
     </Stack>
   );
 };

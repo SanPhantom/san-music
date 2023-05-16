@@ -37,3 +37,26 @@ export const enum2Array = (enumData: typeof SearchKey) => {
 
   return arrayObjects;
 };
+
+export const formatNumber = (num: number) => {
+  if (!num && num !== 0) return num;
+
+  let str_num;
+
+  if (num >= 1e4 && num < 1e8) {
+    str_num = (num / 1e4).toFixed(1);
+    return str_num + "万";
+  } else if (num >= 1e8 && num < 1e11) {
+    str_num = (num / 1e8).toFixed(1);
+    return str_num + "亿";
+  } else if (num >= 1e11 && num < 1e12) {
+    str_num = (num / 1e11).toFixed(0);
+    return str_num + "千亿";
+  } else if (num >= 1e12) {
+    str_num = (num / 1e12).toFixed(0);
+    return str_num + "万亿";
+  } else {
+    //一千以下
+    return num;
+  }
+};

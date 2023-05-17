@@ -13,6 +13,7 @@ import { search } from "../../services/search.service";
 import { formatImageSize } from "../../utils";
 import { formatNumber } from "../../utils/tools";
 import SearchResult from "./SearchResult";
+import PlaylistItem from "../ListItem/PlaylistItem";
 
 interface ISearchPlaylistProps {
   searchKey: string | null;
@@ -53,36 +54,7 @@ const SearchPlaylist = ({ searchKey }: ISearchPlaylistProps) => {
     >
       <Stack sx={{ width: "100%" }}>
         {playlistList.map((item: any, index: number) => (
-          <ListItem
-            key={item.id}
-            secondaryAction={
-              <Stack>
-                <IconButton
-                  size="small"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                >
-                  <MoreVert color="disabled" fontSize="small" />
-                </IconButton>
-              </Stack>
-            }
-            onClick={() => navigate(`/playlist/${item.id}`)}
-          >
-            <ListItemAvatar>
-              <Avatar
-                variant="rounded"
-                src={formatImageSize(item.coverImgUrl, 56)}
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary={item.name}
-              secondary={`${item.trackCount}首, By ${
-                item.creator.nickname
-              }, 播放${formatNumber(item.playCount)}次`}
-            />
-          </ListItem>
+          <PlaylistItem key={item.id} playlist={item} />
         ))}
       </Stack>
     </SearchResult>

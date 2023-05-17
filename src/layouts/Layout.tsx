@@ -28,7 +28,11 @@ const Layout = ({ children }: ILayoutProps) => {
           <LayoutSide />
           <Stack sx={{ flexGrow: 1, minWidth: 0, height: "100%" }}>
             <Box component={"main"} sx={{ flex: 1, overflow: "auto", py: 2 }}>
-              <Container sx={{ height: "100%", minHeight: "100%" }}>
+              <Container
+                sx={{
+                  minHeight: "100%",
+                }}
+              >
                 {children}
               </Container>
             </Box>

@@ -1,5 +1,5 @@
 import { Search } from "@mui/icons-material";
-import { InputBase, alpha, styled } from "@mui/material";
+import { InputBase, InputBaseProps, alpha, styled } from "@mui/material";
 
 const SearchWrapper = styled("div")(({ theme }) => ({
   position: "relative",
@@ -39,15 +39,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const SearchInput = () => {
-  return (
-    <SearchWrapper>
-      <SearchIconWrapper>
-        <Search />
-      </SearchIconWrapper>
-      <StyledInputBase />
-    </SearchWrapper>
-  );
-};
+interface SearchInputProps extends Omit<InputBaseProps, "ref"> {
+  ref?: React.LegacyRef<HTMLDivElement>;
+}
+
+const SearchInput = forwardRef(
+  (props: InputBaseProps, ref?: React.LegacyRef<HTMLDivElement>) => {
+    return (
+      <SearchWrapper ref={ref}>
+        <SearchIconWrapper>
+          <Search />
+        </SearchIconWrapper>
+        <StyledInputBase {...props} />
+      </SearchWrapper>
+    );
+  }
+);
 
 export default SearchInput;

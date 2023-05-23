@@ -28,7 +28,13 @@ const Layout = ({ children }: ILayoutProps) => {
           <LayoutSide />
           <Stack sx={{ flexGrow: 1, minWidth: 0, height: "100%" }}>
             <Box component={"main"} sx={{ flex: 1, overflow: "auto", py: 2 }}>
-              <Container>{children}</Container>
+              <Container
+                sx={{
+                  minHeight: "100%",
+                }}
+              >
+                {children}
+              </Container>
             </Box>
             {currentSongId && <MusicMiniPlayer />}
           </Stack>

@@ -1,21 +1,18 @@
 import {
   Avatar,
   CircularProgress,
-  IconButton,
   Stack,
-  SvgIcon,
   Toolbar,
   Typography,
 } from "@mui/material";
+import { useBoolean } from "ahooks";
 import { useMusicModel } from "../../models/useMusicModel";
+import NextIconButton from "../buttons/NextIconButton";
 import EllipsisText from "../common/EllipsisText/EllipsisText";
 import MusicLinearProgress from "../miniPlayer/MusicLinearProgress";
 import PlayController from "../miniPlayer/PlayController";
-import PlayerTimer from "../miniPlayer/PlayerTimer";
-import { usePlayerModel } from "../../models/usePlayerModel";
 import PlayerFullScreen from "../miniPlayer/PlayerFullScreen";
-import { useBoolean } from "ahooks";
-import NextIconButton from "../buttons/NextIconButton";
+import PlayerTimer from "../miniPlayer/PlayerTimer";
 
 const MusicMiniPlayer = () => {
   const { musicInfo } = useMusicModel((store) => [store.musicInfo]);
@@ -76,7 +73,7 @@ const MusicMiniPlayer = () => {
 
           <Stack direction={"row"} spacing={1.5} alignItems={"center"}>
             <PlayController />
-            <NextIconButton size={46} />
+            <NextIconButton />
           </Stack>
         </Stack>
       </Stack>

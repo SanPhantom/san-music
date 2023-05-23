@@ -9,6 +9,7 @@ import { formatImageSize } from "../utils";
 import EllipsisText from "./common/EllipsisText/EllipsisText";
 import LoadingView from "./common/LoadingView";
 import Title from "./common/Title";
+import PlaylistItem from "./ListItem/PlaylistItem";
 
 interface IRecommendResourceProps {}
 
@@ -100,43 +101,7 @@ const RecommendResource = () => {
         <LoadingView loading={loading}>
           <Stack direction={"row"} spacing={2} ref={listRef}>
             {playlists.map((item: any) => (
-              <Stack
-                key={item.id}
-                spacing={1}
-                sx={{ width: 180, cursor: "pointer" }}
-                onClick={() => navigate(`/playlist/${item.id}`)}
-              >
-                <Box sx={{ position: "relative" }}>
-                  {item.copywriter && (
-                    <Chip
-                      size="small"
-                      color="primary"
-                      label={item.copywriter}
-                      sx={{
-                        position: "absolute",
-                        left: 8,
-                        top: 8,
-                        zIndex: (theme) => theme.zIndex.appBar + 1,
-                        background: (theme) =>
-                          alpha(theme.palette.primary.main, 0.8),
-                      }}
-                    />
-                  )}
-                  <Avatar
-                    src={formatImageSize(item.picUrl, 220)}
-                    variant="rounded"
-                    sx={{
-                      width: 180,
-                      height: 180,
-                      boxShadow: (theme) => theme.shadows[1],
-                    }}
-                  ></Avatar>
-                </Box>
-
-                <EllipsisText line={2} variant={"body1"}>
-                  {item.name}
-                </EllipsisText>
-              </Stack>
+              <PlaylistItem type="card" playlist={item} />
             ))}
           </Stack>
         </LoadingView>

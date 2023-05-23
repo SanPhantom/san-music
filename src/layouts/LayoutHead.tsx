@@ -1,6 +1,6 @@
 import { Email } from "@mui/icons-material";
 import { Toolbar, Typography, IconButton } from "@mui/material";
-import SearchInput from "../components/common/SearchInput";
+import LayoutSearchInput from "../components/layout/LayoutSearchInput";
 
 interface ILayoutHeadProps {}
 
@@ -17,7 +17,7 @@ const LayoutHead = () => {
       >
         San Music
       </Typography>
-      <SearchInput />
+      <LayoutSearchInput />
       <IconButton color="inherit">
         <Email color="inherit" />
       </IconButton>

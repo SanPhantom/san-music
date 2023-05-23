@@ -29,6 +29,11 @@ const routes = createBrowserRouter([
         element: <LazyComponent pageId="ProfilePage" />,
         id: "profile",
       },
+      {
+        path: "/search",
+        element: <LazyComponent pageId="SearchPage" />,
+        id: "search",
+      },
     ],
   },
   {

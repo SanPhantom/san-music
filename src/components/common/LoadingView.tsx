@@ -9,7 +9,7 @@ interface ILoadingViewProps {
 
 const LoadingView = ({ loading, minHeight, children }: ILoadingViewProps) => {
   return (
-    <Stack sx={{ minHeight: minHeight ?? 120 }}>
+    <Stack sx={{ minHeight: minHeight ?? 120, width: "100%" }}>
       {loading ? <Loading /> : children}
     </Stack>
   );

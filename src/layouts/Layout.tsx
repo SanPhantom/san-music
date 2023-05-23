@@ -1,4 +1,4 @@
-import { AppBar, Box, Container, Stack, Toolbar } from "@mui/material";
+import { AppBar, Stack, Toolbar } from "@mui/material";
 import MusicMiniPlayer from "../components/music/MusicMiniPlayer";
 import { useMusicModel } from "../models/useMusicModel";
 import LayoutHead from "./LayoutHead";
@@ -27,15 +27,7 @@ const Layout = ({ children }: ILayoutProps) => {
         <Stack direction={"row"} sx={{ flex: 1, width: "100%", minHeight: 0 }}>
           <LayoutSide />
           <Stack sx={{ flexGrow: 1, minWidth: 0, height: "100%" }}>
-            <Box component={"main"} sx={{ flex: 1, overflow: "auto", py: 2 }}>
-              <Container
-                sx={{
-                  minHeight: "100%",
-                }}
-              >
-                {children}
-              </Container>
-            </Box>
+            <Stack sx={{ flex: 1, overflow: "auto" }}>{children}</Stack>
             {currentSongId && <MusicMiniPlayer />}
           </Stack>
         </Stack>

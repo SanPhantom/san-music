@@ -31,7 +31,7 @@ const routes = createBrowserRouter([
       },
       {
         path: "/search",
-        element: <LazyComponent pageId="SearchPage" />,
+        element: <LazyComponent pageId="SearchPage" autoHeight={false} />,
         id: "search",
       },
     ],

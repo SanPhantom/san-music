@@ -1,9 +1,22 @@
-import { Avatar, Box, Divider, Paper, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useCreation, useLatest, useRequest, useSetState } from "ahooks";
 import { StyledTab, StyledTabs } from "../components/common/CommonTabs";
 import { useUserModel } from "../models/useUserModel";
 import { getUserDetail, getUserVipInfo } from "../services/user.service";
 import { formatImageSize } from "../utils";
+import SingleCard from "../components/common/SingleCard";
+import { Radio } from "@mui/icons-material";
+import { getUserPlaylist } from "../services/playlist.service";
+import SwipeableViews from "react-swipeable-views";
+import PlaylistItem from "../components/ListItem/PlaylistItem";
 
 const ProfilePage = () => {
   const { user } = useUserModel((store) => [store.user]);
@@ -22,13 +35,21 @@ const ProfilePage = () => {
     loading: userVipLoading,
   } = useRequest(getUserVipInfo, { manual: true });
 
+  const {
+    data: playlistData,
+    run: requestPlaylist,
+    loading: playlistLoading,
+  } = useRequest(getUserPlaylist, { manual: true });
+
   const [state, setState] = useSetState({
     vipIcon: "",
     level: 0,
     followers: 0,
     followeds: 0,
-
     tabSelect: 0,
+    myFondPlaylist: null as any | null,
+    collectedPlaylist: [],
+    createdPlaylist: [],
   });
 
   useCreation(() => {
@@ -44,7 +65,6 @@ const ProfilePage = () => {
   }, [userDetail]);
 
   useCreation(() => {
-    console.log({ userVip });
     if (userVip) {
       setState({
         vipIcon: userVip.data?.redVipDynamicIconUrl,
@@ -53,10 +73,35 @@ const ProfilePage = () => {
   }, [userVip]);
 
   useCreation(() => {
-    console.log(uidRef.current);
+    console.log({ playlistData });
+    if (playlistData) {
+      const { playlist } = playlistData;
+      const myFondPlaylist = playlist[0];
+      const otherPlaylist = playlist.splice(1);
+      const collectedPlaylist = otherPlaylist.filter(
+        (item: { userId: string | undefined }) => item.userId !== uidRef.current
+      );
+      const createdPlaylist = otherPlaylist.filter(
+        (item: { userId: string | undefined }) => item.userId === uidRef.current
+      );
+      console.log({
+        myFondPlaylist,
+        collectedPlaylist,
+        createdPlaylist,
+      });
+      setState({
+        myFondPlaylist,
+        collectedPlaylist,
+        createdPlaylist,
+      });
+    }
+  }, [playlistData]);
+
+  useCreation(() => {
     if (uidRef.current) {
       requestUserDetail(uidRef.current);
       requestUserVip();
+      requestPlaylist({ uid: uidRef.current });
     }
   }, [uidRef.current]);
 
@@ -104,6 +149,12 @@ const ProfilePage = () => {
           </Stack>
         </Stack>
       </Paper>
+      <Button>
+        <SingleCard
+          label={state.myFondPlaylist?.name ?? "我喜欢的音乐"}
+          icon={<Radio color="primary" />}
+        />
+      </Button>
       <Paper sx={{ p: 2, pt: 0 }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <StyledTabs
@@ -115,6 +166,29 @@ const ProfilePage = () => {
             <StyledTab label="收藏的歌单" />
           </StyledTabs>
         </Box>
+        <SwipeableViews
+          disableLazyLoading
+          index={state.tabSelect}
+          onChangeIndex={(index) => {
+            setState({ tabSelect: index });
+          }}
+          containerStyle={{ height: 500 }}
+          style={{ height: "100%", marginTop: 8 }}
+          slideStyle={{
+            height: "100%",
+          }}
+        >
+          <Stack sx={{ width: "100%" }}>
+            {state.createdPlaylist.map((item: any, index: number) => (
+              <PlaylistItem key={item.id} playlist={item} />
+            ))}
+          </Stack>
+          <Stack sx={{ width: "100%" }}>
+            {state.collectedPlaylist.map((item: any, index: number) => (
+              <PlaylistItem key={item.id} playlist={item} />
+            ))}
+          </Stack>
+        </SwipeableViews>
       </Paper>
     </Stack>
   );

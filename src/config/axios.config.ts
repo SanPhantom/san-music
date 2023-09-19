@@ -3,7 +3,8 @@ import { getLocalItem } from "./localforage.config";
 import { readCookieKey } from "../utils/cookie";
 
 const request = axios.create({
-  baseURL: "https://musicapi.onephantom.cn/",
+  // baseURL: "https://musicapi.onephantom.cn/",
+  baseURL: "http://onephantom.cn:3000/",
   timeout: 100000,
   withCredentials: true,
   headers: {},

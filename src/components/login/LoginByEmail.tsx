@@ -1,24 +1,27 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
-  FormControl,
   IconButton,
   InputAdornment,
-  InputLabel,
-  OutlinedInput,
   Stack,
   TextField,
   useTheme,
 } from "@mui/material";
 import { useBoolean } from "ahooks";
-import { useForm, Controller } from "react-hook-form";
-import { loginByEmail } from "../../services/user.service";
 import md5 from "js-md5";
+import { Controller, useForm } from "react-hook-form";
+import { setLocalItem } from "../../config/localforage.config";
+import { loginByEmail } from "../../services/user.service";
+import { useUserModel } from "../../models/useUserModel";
 
 const LoginByEmail = () => {
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const { handleSubmit, control } = useForm();
+
+  const { updateLoginStatus } = useUserModel((store) => [
+    store.updateLoginStatus,
+  ]);
 
   const [isVisible, { toggle: toggleVisible }] = useBoolean(false);
 
@@ -32,7 +35,12 @@ const LoginByEmail = () => {
     console.log({ params });
 
     const res = await loginByEmail(params);
-    console.log(res);
+    if (res.code === 200) {
+      console.log(res);
+      setLocalItem("m_cookie", res.cookie);
+      updateLoginStatus();
+      navigate("/");
+    }
   }, []);
 
   return (

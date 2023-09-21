@@ -18,13 +18,13 @@ export const loginByPhone = (data: LoginByPhone) => {
 };
 
 export const sentCaptcha = (phone: string) => {
-  return musicAxios.post("/captcha/sent", {
+  return musicAxios.post<any, any>("/captcha/sent", {
     phone: phone,
   });
 };
 
 export const loginByEmail = (data: LoginByEmail) => {
-  return musicAxios.post("/login", {
+  return musicAxios.post<any, any>("/login", {
     ...data,
   });
 };

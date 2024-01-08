@@ -31,7 +31,7 @@ export const [useUserModel, getUserModel] = createGlobalStore(() => {
     // const music_u = readCookieKey(cookie, "MUSIC_U");
     // console.log({ expires, music_u });
     const { data } = await loginStatus();
-    if (!data.account.anonimousUser && !data.profile) {
+    if (!data.account?.anonimousUser && !data.profile) {
       const anonymousUser = await loginByVisitor();
       setLocalItem("m_cookie", anonymousUser.cookie);
       updateUser({

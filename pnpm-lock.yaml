@@ -6,6 +6,7 @@ specifiers:
   '@mui/icons-material': ^5.11.11
   '@mui/material': ^5.11.11
   '@reduxjs/toolkit': ^1.9.3
+  '@types/js-md5': ^0.7.0
   '@types/node': ^18.14.4
   '@types/ramda': ^0.28.23
   '@types/react': ^18.0.27
@@ -16,6 +17,7 @@ specifiers:
   ahooks: ^3.7.5
   axios: ^1.3.4
   hox: ^2.1.0
+  js-md5: ^0.7.3
   less: ^4.1.3
   less-loader: ^11.1.0
   localforage: ^1.10.0
@@ -23,6 +25,7 @@ specifiers:
   ramda: ^0.28.0
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-hook-form: ^7.46.1
   react-router-dom: ^6.8.2
   react-swipeable-views: ^0.14.0
   san-lyric: ^0.2.0
@@ -41,11 +44,13 @@ dependencies:
   ahooks: 3.7.5_react@18.2.0
   axios: 1.3.4
   hox: 2.1.0_react@18.2.0
+  js-md5: 0.7.3
   localforage: 1.10.0
   qrcode.react: 3.1.0_react@18.2.0
   ramda: 0.28.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-hook-form: 7.46.1_react@18.2.0
   react-router-dom: 6.8.2_biqbaboplfbrettd7655fr4n2y
   react-swipeable-views: 0.14.0_react@18.2.0
   san-lyric: 0.2.0_3xleytyzprlgycb2ded54tx72i
@@ -54,6 +59,7 @@ dependencies:
   vite-plugin-svgr: 2.4.0_vite@4.1.4
 
 devDependencies:
+  '@types/js-md5': 0.7.0
   '@types/node': 18.14.4
   '@types/ramda': 0.28.23
   '@types/react': 18.0.28
@@ -1322,6 +1328,10 @@ packages:
     resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
     dev: false
 
+  /@types/js-md5/0.7.0:
+    resolution: {integrity: sha512-4mN02EhCni6MlvCUl9bpcbMfu7R3G+ac+J37b7gKCu3tWhZc5/Ya41T+2QNR2aFt6vnMe+uTa5rFQ+nT2kl6cA==}
+    dev: true
+
   /@types/lodash/4.14.194:
     resolution: {integrity: sha512-r22s9tAS7imvBt2lyHC9B8AGwWnXaYb1tY09oyLkXDs4vArpYJzw09nj8MLx5VfciBPGIb+ZwG0ssYnEPJxn/g==}
     dev: false
@@ -2505,6 +2515,10 @@ packages:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
     dev: false
 
+  /js-md5/0.7.3:
+    resolution: {integrity: sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==}
+    dev: false
+
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
     dev: false
@@ -3071,6 +3085,15 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       warning: 4.0.3
+    dev: false
+
+  /react-hook-form/7.46.1_react@18.2.0:
+    resolution: {integrity: sha512-0GfI31LRTBd5tqbXMGXT1Rdsv3rnvy0FjEk8Gn9/4tp6+s77T7DPZuGEpBRXOauL+NhyGT5iaXzdIM2R6F/E+w==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is/16.13.1:

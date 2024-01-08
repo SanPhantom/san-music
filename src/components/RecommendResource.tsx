@@ -101,7 +101,7 @@ const RecommendResource = () => {
         <LoadingView loading={loading}>
           <Stack direction={"row"} spacing={2} ref={listRef}>
             {playlists.map((item: any) => (
-              <PlaylistItem type="card" playlist={item} />
+              <PlaylistItem key={item.id} type="card" playlist={item} />
             ))}
           </Stack>
         </LoadingView>

@@ -52,7 +52,10 @@ const SearchMv = ({ searchKey }: ISearchMvProps) => {
         }}
       >
         {mvList.map((item: any, index: number) => (
-          <Stack sx={{ width: "calc(25% - 9px)", gap: 1 }}>
+          <Stack
+            key={`mv_${item.id}`}
+            sx={{ width: "calc(25% - 9px)", gap: 1 }}
+          >
             <ProportionImage
               src={item.cover}
               proportion={9 / 16}
